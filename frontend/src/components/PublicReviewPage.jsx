@@ -1,0 +1,276 @@
+import React, { useState } from "react";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { AiOutlineLike } from "react-icons/ai";
+import { IoShareSocialOutline, IoFlagOutline } from "react-icons/io5";
+import { Rate } from "antd";
+import { useParams, Link } from "react-router-dom";
+import Navbar from "./Navbar";
+import Looter from "./Looter";
+import { useGlobalContext } from "../utils/useContextApi";
+import {
+  IMG36, IMG37, IMG38, IMG39, IMG41, IMG45, IMG46, IMG47, IMG48
+} from "../assets/images";
+
+const PublicReviewPage = () => {
+  const { addCompany, companyReview, replies, addReply } = useGlobalContext();
+  const { id } = useParams();
+
+  const company = addCompany?.find((elem) => elem._id === id);
+  const reviews = companyReview?.filter((elem) => elem.companyID === id);
+
+  const [replyFormVisible, setReplyFormVisible] = useState({});
+  const [replyText, setReplyText] = useState("");
+
+  const handleReplyButtonClick = (reviewID) => {
+    setReplyFormVisible((prev) => ({
+      ...prev,
+      [reviewID]: !prev[reviewID]
+    }));
+  };
+
+  const handleReplyChange = (e) => {
+    setReplyText(e.target.value);
+  };
+
+  const handleReplySubmit = (reviewID) => {
+    const newReply = {
+      reviewID,
+      text: replyText,
+      userName: "Current User", // Replace with actual user name
+      userPhoto: "path/to/user/photo", // Replace with actual user photo URL
+      createdAt: new Date().toISOString(),
+      isCompanyReply: false
+    };
+    addReply(newReply);
+    setReplyText("");
+    setReplyFormVisible((prev) => ({
+      ...prev,
+      [reviewID]: false
+    }));
+  };
+
+  const getTimeDifference = (createdAt) => {
+    const prevDate = new Date(createdAt);
+    const currentDate = new Date();
+    const diffTime = currentDate - prevDate;
+    const diffSeconds = Math.floor(diffTime / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) return `${diffDays} days ago`;
+    if (diffHours > 0) return `${diffHours} hours ago`;
+    if (diffMinutes > 0) return `${diffMinutes} minutes ago`;
+    return `${diffSeconds} seconds ago`;
+  };
+
+  const desc = ["terrible", "bad", "normal", "good", "wonderful"];
+
+  const renderReplies = (reviewID) => {
+    return replies?.filter(reply => reply.reviewID === reviewID)?.map(reply => (
+      <div key={reply._id} className="ml-10 mt-4 p-4 border-t border-gray-200">
+        <div className="flex items-center mb-2">
+          <img
+            src={reply.isCompanyReply ? company.logo : reply.userPhoto}
+            alt={reply.isCompanyReply ? company.companyName : reply.userName}
+            className="h-8 w-8 rounded-full"
+          />
+          <div className="ml-2">
+            <div className="text-sm font-bold">{reply.isCompanyReply ? company.companyName : reply.userName}</div>
+            <div className="text-xs text-gray-500">{getTimeDifference(reply.createdAt)}</div>
+          </div>
+        </div>
+        <div className="text-sm">{reply.text}</div>
+      </div>
+    ));
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="h-full w-full mt-[12px] bg-[#F2F2F5] publicreviewpage md:mt-[96px]">
+        <div className="w-full h-[280px] bg-white md:h-full">
+          <div className="w-full topreviewpage flex justify-center flex-col items-center">
+            <div className="w-full flex mb-[40px] justify-between items-center xs:flex-col md:w-10/12 md:h-[150px] md:flex-row">
+              <div className="w-full md:w-6/12 flex items-center justify-between md:justify-center">
+                <div>
+                  <img
+                    loading="lazy"
+                    src={company?.logo}
+                    alt={company?.companyName}
+                    className="h-[100px] w-[100px]"
+                  />
+                </div>
+                <div className="translate-x-[55px] md:translate-x-[0px]">
+                  <h2 className="text-[15px] md:text-[40px] font-bold">
+                    {company?.companyName}
+                  </h2>
+                  <p className="text-[13px] font-normal">Reviews 7,958 • Great</p>
+                  <div className="flex items-center">
+                    <Rate tooltips={desc} value={Math.ceil(3.7)} />
+                    <div className="flex items-center ml-[4px]">
+                      <p>4.1</p>
+                      <img src={IMG36} alt="Rating" />
+                    </div>
+                  </div>
+                  <div className="flex items-center bg-[#EEF9F5]">
+                    <img src={IMG37} alt="Verified Company" />
+                    <p className="ml-[1px] text-[7px] font-normal">VERIFIED COMPANY</p>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex justify-center md:w-6/12">
+                <a href={company?.siteLink} target="_blank" rel="noopener noreferrer" className="w-11/12 border-3 border-[#DCDCE6] flex justify-around items-center md:w-7/12 md:h-[104px]">
+                  <div className="flex items-center">
+                    <img loading="lazy" src={company?.logo} alt={company?.companyName} className="h-[50px]" />
+                    <p className="ml-[12px] text-[22px] font-normal">{company?.companyName}</p>
+                  </div>
+                  <MdOutlineKeyboardArrowRight />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full flex justify-center items-center mt-[20px]">
+          <div className="w-11/12 flex justify-between xs:flex-col lg:flex-row lg:w-8/12">
+            <div className="w-full md:w-11/12 lg:w-7/12">
+              <div className="bg-white h-[88px] flex justify-between items-center px-[12px] mb-5">
+                <div className="flex items-center">
+                  <img loading="lazy" src={IMG38} alt="Write Review" />
+                  <Link to={`/review/${id}`} className="text-[#1A66FF] text-[14px] font-normal ml-[13px]">
+                    Write a review
+                  </Link>
+                </div>
+                <img loading="lazy" src={IMG39} alt="Icon" />
+              </div>
+              <div className="w-full flex justify-center my-[19px]">
+                <div className="w-full flex justify-center md:justify-end">
+                  <div className="w-11/12 flex justify-between items-center md:w-6/12">
+                    <div className="text-[12px]">Sort by:</div>
+                    <div className="bg-[#454554] p-[4px] text-[12px] text-white mr-[8px]">Most relevant</div>
+                    <div className="bg-[#fbfbfb] p-[4px] border-[1px] text-[12px] border-[#9A9AAD]">Most recent</div>
+                    <img loading="lazy" src={IMG36} alt="Sort Icon" className="ml-[7px]" />
+                  </div>
+                </div>
+              </div>
+              {reviews?.map((review) => (
+                <div key={review._id} className="w-full bg-white flex flex-col mb-5">
+                  <div className="w-11/12 mx-auto">
+                    <div className="flex items-center pt-[5px]">
+                      <div className="bg-[#E3EFFB] p-[7px]">UN</div>
+                      <div className="ml-[12px]">
+                        <div>uniacc01</div>
+                        <div className="flex items-center">
+                          <div className="text-[#6C6C85]">2 reviews</div>
+                          <div className="flex items-center ml-[14px]">
+                            <img loading="lazy" src={IMG41} alt="Country" className="h-[18px]" />
+                            <p className="ml-[5px] text-[#6C6C85]">CA</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="my-[16px]" />
+                    <div className="flex justify-between">
+                      <Rate className="mt-5 text-2xl" tooltips={desc} value={review.rating} disabled />
+                      <div className="w-4/12 text-right text-[#6C6C85] md:w-3/12">{getTimeDifference(review.createdAt)}</div>
+                    </div>
+                    <p className="my-[12px] text-[18px]">The response was very good.</p>
+                    <p className="text-[14px] my-[6px]">{review?.review}</p>
+                    <hr className="my-[6px]" />
+                    <div className="flex justify-between my-[12px]">
+                      <div className="w-5/12 flex items-center md:w-4/12">
+                        <div className="flex items-center">
+                          <AiOutlineLike className="mr-[3px]" />
+                          <div className="text-[#6C6C85]">Useful</div>
+                        </div>
+                        <div className="flex items-center">
+                          <IoShareSocialOutline className="mr-[3px]" />
+                          <div className="text-[#6C6C85]">Share</div>
+                        </div>
+                      </div>
+                      <div className="w-3/12 text-right flex items-center justify-end">
+                        <IoFlagOutline />
+                      </div>
+                    </div>
+                    {renderReplies(review._id)}
+                    <div className="flex justify-end mt-2">
+                      <button
+                        onClick={() => handleReplyButtonClick(review._id)}
+                        className="text-blue-500 text-sm"
+                      >
+                        Reply
+                      </button>
+                    </div>
+                    {replyFormVisible[review._id] && (
+                      <div className="mt-2">
+                        <textarea
+                          value={replyText}
+                          onChange={handleReplyChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                          rows="3"
+                          placeholder="Write your reply..."
+                        ></textarea>
+                        <div className="flex justify-end mt-2">
+                          <button
+                            onClick={() => handleReplySubmit(review._id)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-[15px] w-full md:w-6/12 lg:w-4/12 lg:mt-[0px]">
+              <div className="bg-white rounded-md py-[12px] px-[5px] mb-[20px] companyactivity">
+                <div className="text-[16px] font-normal ml-[10px]">Company activity See all</div>
+                <hr className="my-[8px]" />
+                <div className="flex items-center ml-[10px]">
+                  <div>
+                    <img loading="lazy" src={IMG36} alt="Company Activity" />
+                  </div>
+                  <div className="ml-[6px]">
+                    <p className="text-[13px] font-normal">Ashe S.  <span className="text-[#6C6C85]">left a review</span></p>
+                    <p className="text-[#6C6C85] text-[13px]">30 minutes ago</p>
+                  </div>
+                </div>
+                <hr className="my-[8px]" />
+                <div className="flex items-center ml-[10px]">
+                  <div>
+                    <img loading="lazy" src={IMG36} alt="Company Activity" />
+                  </div>
+                  <div className="ml-[6px]">
+                    <p className="text-[13px] font-normal">Janko W.  <span className="text-[#6C6C85]">left a review</span></p>
+                    <p className="text-[#6C6C85] text-[13px]">1 hour ago</p>
+                  </div>
+                </div>
+                <hr className="my-[8px]" />
+                <div className="flex items-center ml-[10px]">
+                  <div>
+                    <img loading="lazy" src={IMG36} alt="Company Activity" />
+                  </div>
+                  <div className="ml-[6px]">
+                    <p className="text-[13px] font-normal">Oscar J.  <span className="text-[#6C6C85]">left a review</span></p>
+                    <p className="text-[#6C6C85] text-[13px]">2 hours ago</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-center bg-white">
+                <img loading="lazy" src={IMG45} alt="Promo" />
+                <img loading="lazy" src={IMG46} alt="Promo" className="mt-[15px]" />
+                <img loading="lazy" src={IMG47} alt="Promo" className="mt-[15px]" />
+                <img loading="lazy" src={IMG48} alt="Promo" className="mt-[15px]" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <Looter />
+      </div>
+    </>
+  );
+};
+
+export default PublicReviewPage;
