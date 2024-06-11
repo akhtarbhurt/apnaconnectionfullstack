@@ -17,7 +17,7 @@ const restrictTo = async (req, res, next) => {
     const user = await User.findOne({ email: payload.email });
     console.log("user founded in restriction", user);
     if (user.emailVerified) {
-      return res.redirect("/").next();
+      return res.json({msg:user}).redirect("/").next();
     }
   } catch (err) {
     // If token verification fails, proceed to login
