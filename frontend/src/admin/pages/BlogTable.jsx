@@ -118,7 +118,7 @@ const BlogsTable = () => {
   ];
 
   return (
-    <div className='h-screen'>
+    <div className='min-h-screen'>
       <div className="search-bar w-full flex justify-end mb-4 mt-20">
         <Input.Search
           placeholder="Search blogs"

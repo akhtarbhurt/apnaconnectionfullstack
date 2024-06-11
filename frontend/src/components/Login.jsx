@@ -40,8 +40,11 @@ const Login = () => {
   useEffect(() => {
     axios
       .get("http://localhost:3000/api/v1/login")
+
       .then((res) => {
+
         navigate("/");
+        
       })
       .catch((err) => {
         console.log("token not found login page", err);
