@@ -13,6 +13,16 @@ const [isSticky,setIsSticky] = useState(true)
   const [hamberg,setHamberg] = useState(true);
   const { profile, setprofile,profilesrc, setprofilesrc,dashboard,setDashboard } = usecotextFunction();
 
+
+
+  // ==================getting data from local storage ========
+
+setprofile(localStorage.getItem("apnaconnectionprofile"));
+  setprofilesrc(localStorage.getItem("tokenapnaconnection"));
+  setDashboard(localStorage.getItem("apnaconnectionadmin"));
+
+  // ==================getting data from local storage ========
+
   // =====ant design============
 
 
