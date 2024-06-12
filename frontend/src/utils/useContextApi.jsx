@@ -29,7 +29,7 @@ export const AppProvider = ({ children }) => {
         );
         setHeading(response.data.result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -44,7 +44,7 @@ export const AppProvider = ({ children }) => {
         );
         setCategory(response.data.result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchCategoryApi();
@@ -58,7 +58,7 @@ export const AppProvider = ({ children }) => {
         );
         setSection(response.data.result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchSectionApi();
@@ -72,7 +72,7 @@ export const AppProvider = ({ children }) => {
         );
         setAddCompany(response.data.result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchUserReg();
@@ -82,9 +82,9 @@ export const AppProvider = ({ children }) => {
       try {
         const response = await axios.get("http://localhost:3000/api/v1/login");
         setProfile(response.data.result);
-        console.log("profile is", profile);
+        // console.log("profile is", profile);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchUserProfile();
@@ -98,7 +98,7 @@ export const AppProvider = ({ children }) => {
         );
         setReview(response.data.payload);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchReview();
@@ -110,7 +110,7 @@ export const AppProvider = ({ children }) => {
         const response = await axios.get(`http://localhost:3000/api/v1/client`);
         setClient(response.data.result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchClient();
@@ -123,7 +123,7 @@ export const AppProvider = ({ children }) => {
         const response = await axios.get("http://localhost:3000/api/v1/like");
         setGetLike(response.data.result);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
     fetchGetLikes();
@@ -135,7 +135,7 @@ export const AppProvider = ({ children }) => {
         const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
         setUserProfile(response.data);
       } catch (err) {
-        console.log("Error", err);
+        // console.log("Error", err);
       }
     };
     fetchProfile();
@@ -146,7 +146,7 @@ export const AppProvider = ({ children }) => {
         const response = await axios.get("http://localhost:3000/api/v1/companyLogin"); 
         setCompanyLogin(response.data)
       } catch (err) {
-        console.log("Error", err);
+        // console.log("Error", err);
       }
     };
     fetchComanyLoogin()
@@ -158,7 +158,7 @@ export const AppProvider = ({ children }) => {
         const response = await axios.get("http://localhost:3000/api/v1/replies")
         setReplies(response.data.payload)
       } catch (error) {
-        console.log(error)
+        // console.log(error)
       }
     }
 

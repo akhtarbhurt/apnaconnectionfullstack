@@ -54,10 +54,10 @@ const updateReviewController = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, review, rating, companyID, userID } = req.body;
-    
+
     const payload = await Reviews.findByIdAndUpdate(id, { name, review, rating, companyID, userID }, { new: true });
     if (!payload) {
-      return res.status(400).json({ error: "response is not available" });
+      return res.status(400).json({ error: "response is not available"});
     }
     return res.status(200).json({ payload });
   } catch (error) {
