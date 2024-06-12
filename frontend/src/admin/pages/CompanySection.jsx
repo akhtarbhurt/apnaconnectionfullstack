@@ -108,7 +108,7 @@ export default function CompanySection() {
         }
       });
 
-      if (logoFileList.length > 0) {
+      if (logoFileList.length > 0 && logoFileList[0].originFileObj) {
         formData.append("logo", logoFileList[0].originFileObj);
       }
 
@@ -253,21 +253,6 @@ export default function CompanySection() {
             <Form.Item
               name="companyName"
               label="Service Title"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              name="description"
-              label="Description"
-              rules={[{ required: true }]}
-            >
-              <Input.TextArea />
-            </Form.Item>
-            <Form.Item
-              name="siteLink"
-              label="Site Link"
               rules={[{ required: true }]}
             >
               <Input />

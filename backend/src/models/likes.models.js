@@ -10,11 +10,11 @@ const likesSchema = new Schema({
         default: false
     },
     userID:{
-        type: Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     postID:{
-        type: Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     }
 })

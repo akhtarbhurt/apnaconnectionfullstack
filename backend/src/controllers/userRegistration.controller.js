@@ -383,6 +383,30 @@ const getReportedReviewsController = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  await User.findByIdAndUpdate(
+      req.user._id,
+      {
+          $unset: {
+              refreshToken: 1 // this removes the field from the document
+          }
+      },
+      {
+          new: true
+      }
+  );
+
+  const options = {
+      httpOnly: true,
+      secure: true
+  };
+
+  return res
+      .status(200)
+      .clearCookie("accessToken", options)
+      .clearCookie("refreshToken", options)
+      .staus(200).json({}, 'logout successfully')
+};
 
 
 export { 

@@ -7,13 +7,14 @@ import { IoIosLogOut } from "react-icons/io";
 import { Tooltip, Dropdown, Menu } from "antd";
 import { RxCross1 } from "react-icons/rx";
 import { FaAnglesRight, FaAnglesLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function Sidebar({
   isSidebarOpen,
   toggleSidebar,
   isResponsive,
   handleOpenSidebar,
-  handleTabs,
+ 
   activeTab,
 }) {
   const [isCompanyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -24,49 +25,55 @@ export default function Sidebar({
 
   const companyMenu = (
     <Menu>
-      <Menu.Item key="addCompany" onClick={() => handleTabs("addCompany")}>
-        Add Company
+      <Menu.Item key="addCompany" >
+        <Link to={"/admin/addCompany"}>Add Company</Link>
       </Menu.Item>
-      <Menu.Item key="companyList" onClick={() => handleTabs("companyList")}>
-        Company List
+      <Menu.Item key="companyList" >
+        <Link to={"/admin/companyList"}>Company List</Link>
       </Menu.Item>
     </Menu>
   );
 
   const contentManagement = (
     <Menu>
-      <Menu.Item key="addCompany" onClick={() => handleTabs("layout")}>
-        Headings
+      <Menu.Item key="addCompany">
+        <Link to={"/admin/headings"}>Headings</Link>
       </Menu.Item>
-      <Menu.Item key="category" onClick={() => handleTabs("category")}>
-        Category
+      <Menu.Item key="category" >
+        <Link to={"/admin/category"}>Category</Link>
       </Menu.Item>
-      <Menu.Item key="section" onClick={() => handleTabs("section")}>
-        Section
+      <Menu.Item key="section" >
+        <Link to={"/admin/section"}>Section</Link>
       </Menu.Item>
-      <Menu.Item key="clientManagement" onClick={() => handleTabs("clientManagement")}>
-        Client Management
+      <Menu.Item
+        key="clientManagement"
+        
+      >
+        <Link to={"/admin/clientManagement"}>Client Management</Link>
       </Menu.Item>
-      <Menu.Item key="companyList" onClick={() => handleTabs("footerContent")}>
-        Footer Content
+      <Menu.Item key="companyList" >
+        <Link to={"/admin/footerContent"}>Footer Content</Link>
       </Menu.Item>
     </Menu>
   );
 
   const blogManagement = (
     <Menu>
-      <Menu.Item key="addCompany" onClick={() => handleTabs("addBlog")}>
-        Add Blog
+      <Menu.Item key="addCompany" >
+        <Link to={"/admin/addBlog"}>Add Blog</Link>
       </Menu.Item>
-      <Menu.Item key="companyList" onClick={() => handleTabs("blogTable")}>
-        Blog Table
+      <Menu.Item key="companyList" >
+        <Link to={"/admin/blogTable"}>Blog Table</Link>
       </Menu.Item>
     </Menu>
   );
 
   const clientManagement = (
     <Menu>
-      <Menu.Item key="clientManagement" onClick={() => handleTabs("clientManagement")}>
+      <Menu.Item
+        key="clientManagement"
+        
+      >
         Client Management
       </Menu.Item>
     </Menu>
@@ -91,17 +98,19 @@ export default function Sidebar({
         <nav className="flex justify-center flex-grow">
           <ul className="text-white flex flex-col mt-10 gap-10 text-lg">
             <Tooltip placement="right" title={isSidebarOpen ? "" : "Dashboard"}>
+              <Link to={'/admin/home'} >
               <li
                 className={`cursor-pointer rounded-md p-1 px-5 flex gap-3 items-center ${
                   activeTab === "home" ? "bg-white text-black" : "text-white"
                 }`}
-                onClick={() => handleTabs("home")}
+              
               >
                 <IoIosHome />
                 <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
                   Dashboard
                 </p>
               </li>
+              </Link>
             </Tooltip>
 
             <Dropdown
@@ -162,33 +171,36 @@ export default function Sidebar({
                 </div>
               </li>
             </Dropdown>
-           
 
             <Tooltip placement="right" title={isSidebarOpen ? "" : "Setting"}>
+              <Link to={'/admin/setting'} >
               <li
                 className={`cursor-pointer rounded-md p-1 px-5 flex gap-3 items-center ${
                   activeTab === "setting" ? "bg-white text-black" : "text-white"
                 }`}
-                onClick={() => handleTabs("setting")}
+                
               >
                 <CiSettings />
                 <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
                   Setting
                 </p>
               </li>
+              </Link>
             </Tooltip>
             <Tooltip placement="right" title={isSidebarOpen ? "" : "Setting"}>
+              <Link to={'/admin/report'} >
               <li
                 className={`cursor-pointer rounded-md p-1 px-5 flex gap-3 items-center ${
                   activeTab === "setting" ? "bg-white text-black" : "text-white"
                 }`}
-                onClick={() => handleTabs("report")}
+               
               >
                 <CiSettings />
                 <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
-                  Report 
+                  Report
                 </p>
               </li>
+              </Link>
             </Tooltip>
           </ul>
         </nav>
@@ -228,15 +240,17 @@ export default function Sidebar({
                 placement="right"
                 title={isSidebarOpen ? "" : "Dashboard"}
               >
+                <Link to={'/admin/home'} >
                 <li
                   className="cursor-pointer bg-white text-black rounded-md p-1 px-5 flex gap-3 items-center"
-                  onClick={() => handleTabs("home")}
+                 
                 >
                   <IoIosHome />
                   <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
                     Dashboard
                   </p>
                 </li>
+                </Link>
               </Tooltip>
 
               <Dropdown
@@ -275,14 +289,16 @@ export default function Sidebar({
                   </p>
                 </li>
               </Dropdown>
-             
+
               <Tooltip placement="right" title={isSidebarOpen ? "" : "Setting"}>
-                <li className="cursor-pointer p-1 px-5 flex gap-3 items-center">
-                  <CiSettings />
-                  <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
-                    Setting
-                  </p>
-                </li>
+                <Link to={"/admin/setting"}>
+                  <li className="cursor-pointer p-1 px-5 flex gap-3 items-center">
+                    <CiSettings />
+                    <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
+                      Setting
+                    </p>
+                  </li>
+                </Link>
               </Tooltip>
               <Tooltip placement="right" title={isSidebarOpen ? "" : "Report"}>
                 <li className="cursor-pointer p-1 px-5 flex gap-3 items-center">
