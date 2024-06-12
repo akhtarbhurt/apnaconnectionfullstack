@@ -29,7 +29,7 @@ const ReviewManagement = () => {
         setReviews(response.data.payload);
       } catch (error) {
         console.error('Failed to fetch reviews', error);
-        notification.error({ message: 'Failed to fetch reviews' });
+       setReviews([])
       } finally {
         setLoading(false);
       }
@@ -199,7 +199,7 @@ const ReviewManagement = () => {
         />
       </Modal>
       <div>
-        {replies.map((reply) => (
+        {replies?.map((reply) => (
           <div key={reply._id}>
             {reply.text} (by {reply.isCompanyReply ? 'Company' : 'User'})
           </div>

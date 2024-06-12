@@ -6,34 +6,42 @@ import { notification } from 'antd';
 
 const Dashboard = () => {
   const [reviewsData, setReviewsData] = useState({
-    monthlyReviews: [],
-    ratingsDistribution: [],
-    sentimentAnalysis: [],
+    monthlyReviews: {},
+    ratingsDistribution: {},
+    sentimentAnalysis: {},
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchReviewsData = async () => {
       try {
-        const companyIDResponse = await axios.get(`http://localhost:3000/api/v1/companyLogin`);
-        const companyID = companyIDResponse.data.result._id;
+        const companyIDResponse = await axios.get('http://localhost:3000/api/v1/companyLogin');
+        const companyID = companyIDResponse?.data?.result?._id;
 
         const response = await axios.get(`http://localhost:3000/api/v1/companyReviews/${companyID}`);
-        const reviews = response.data.payload;
+        const reviews = response?.data?.payload;
 
         // Process data for the charts
-        const monthlyReviews = processMonthlyReviews(reviews);
-        const ratingsDistribution = processRatingsDistribution(reviews);
-        const sentimentAnalysis = processSentimentAnalysis(reviews);
+        const monthlyReviews = processMonthlyReviews(reviews  );
+        const ratingsDistribution = processRatingsDistribution(reviews  );
+        const sentimentAnalysis = processSentimentAnalysis(reviews  );
 
-        setReviewsData({
-          monthlyReviews,
-          ratingsDistribution,
-          sentimentAnalysis,
-        });
+        
+          setReviewsData({
+            monthlyReviews  ,
+            ratingsDistribution,
+            sentimentAnalysis,
+          });
+        
+
       } catch (error) {
         console.error('Failed to fetch reviews', error);
-        notification.error({ message: 'Failed to fetch reviews' });
+        
+        setReviewsData({
+          monthlyReviews: processMonthlyReviews([]),
+          ratingsDistribution: processRatingsDistribution([]),
+          sentimentAnalysis: processSentimentAnalysis([]),
+        });
       } finally {
         setLoading(false);
       }
@@ -46,7 +54,7 @@ const Dashboard = () => {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const data = Array(12).fill(0);
 
-    reviews.forEach((review) => {
+    reviews?.forEach((review) => {
       const month = new Date(review.date).getMonth();
       data[month]++;
     });
@@ -68,9 +76,9 @@ const Dashboard = () => {
   const processRatingsDistribution = (reviews) => {
     const ratings = [0, 0, 0, 0, 0];
 
-    reviews.forEach((review) => {
-      if (review.rating >= 1 && review.rating <= 5) {
-        ratings[review.rating - 1]++;
+    reviews?.forEach((review) => {
+      if (review?.rating >= 1 && review?.rating <= 5) {
+        ratings[review?.rating - 1]++;
       }
     });
 
@@ -103,7 +111,7 @@ const Dashboard = () => {
   const processSentimentAnalysis = (reviews) => {
     const sentiment = { positive: 0, neutral: 0, negative: 0 };
 
-    reviews.forEach((review) => {
+    reviews?.forEach((review) => {
       if (review.rating >= 4) {
         sentiment.positive++;
       } else if (review.rating === 3) {
@@ -130,23 +138,23 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='min-h-screen p-8 bg-gray-100'>
-      <h1 className='text-2xl font-bold mb-4'>Admin Dashboard</h1>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        <div className='bg-white p-6 rounded-lg shadow w-full'>
-          <h2 className='text-xl font-bold mb-2'>Overview</h2>
+    <div className="min-h-screen p-8 bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow w-full">
+          <h2 className="text-xl font-bold mb-2">Overview</h2>
           <p>Summary of recent activities</p>
         </div>
-        <div className='bg-white p-6 rounded-lg shadow col-span-2 w-full'>
-          <h2 className='text-xl font-bold mb-2'>Monthly Reviews</h2>
+        <div className="bg-white p-6 rounded-lg shadow col-span-2 w-full">
+          <h2 className="text-xl font-bold mb-2">Monthly Reviews</h2>
           <Line data={reviewsData.monthlyReviews} />
         </div>
-        <div className='bg-white p-6 rounded-lg shadow col-span-1 w-full'>
-          <h2 className='text-xl font-bold mb-2'>Ratings Distribution</h2>
+        <div className="bg-white p-6 rounded-lg shadow col-span-1 w-full">
+          <h2 className="text-xl font-bold mb-2">Ratings Distribution</h2>
           <Bar data={reviewsData.ratingsDistribution} />
         </div>
-        <div className='bg-white p-6 rounded-lg shadow col-span-1 w-full'>
-          <h2 className='text-xl font-bold mb-2'>Sentiment Analysis</h2>
+        <div className="bg-white p-6 rounded-lg shadow col-span-1 w-full">
+          <h2 className="text-xl font-bold mb-2">Sentiment Analysis</h2>
           <Pie data={reviewsData.sentimentAnalysis} />
         </div>
       </div>

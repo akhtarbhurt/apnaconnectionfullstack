@@ -1,147 +1,114 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Card, Select, Upload, Radio, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import axios from "axios";
+import React from 'react';
+import { Form, Input, Upload, Button, message, Select } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import axios from 'axios';
+
+const { Option } = Select;
 
 export default function AddCompany() {
-  const [addCategory] = Form.useForm();
-  const [fileList, setFileList] = useState([]);
-  const [categories, setCategories] = useState([]); // Added state for categories
+  const [form] = Form.useForm();
 
-  const handleAddCategory = async (values) => {
+  const handleAddCompany = async (values) => {
+    const formData = new FormData();
+    formData.append('logo', values.logo[0].originFileObj);
+    formData.append('companyName', values.companyName);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    formData.append('confirmPassword', values.confirmPassword);
+    formData.append('status', values.status);
+
     try {
-      const formData = new FormData();
-      formData.append("serviceTitle", values.serviceTitle);
-      formData.append("description", values.description);
-      formData.append("selectCategory", values.category);
-      formData.append("siteLink", values.siteLink);
-      formData.append("status", values.status);
-      if (fileList.length > 0) {
-        formData.append("infoImage", fileList[0].originFileObj);
-      } else {
-        message.error("Please upload an image!");
-        return;
-      }
-
-      const response = await axios.post("http://localhost:3000/api/v1/information", formData, {
+      const response = await axios.post('http://localhost:3000/api/v1/userReg', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
-
       if (response.status === 200) {
-        message.success("Information added successfully!");
-        addCategory.resetFields();
-        setFileList([]);
-      } else {
-        message.error("Failed to add information");
+        message.success('Company added successfully.');
+        form.resetFields();
       }
     } catch (error) {
-      console.error("Error adding information:", error);
-      message.error("An error occurred while adding information");
+      console.error('Error adding company:', error.response.data);
+      message.error('Failed to add company: ' + error.response.data.message);
     }
   };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/api/v1/category`);
-      setCategories(response.data.result);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-      message.error("Failed to fetch categories");
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const handleFileChange = ({ fileList }) => setFileList(fileList);
 
   return (
-    <>
-    <div className=" w-full h-full p-5 " >
-      <Card className="mb-5 mt-10 ">
-        <Form
-          form={addCategory}
-          layout="vertical"
-          onFinish={handleAddCategory}
+    <div className="add-company-section">
+      <Form form={form} layout="vertical" onFinish={handleAddCompany}>
+        <Form.Item
+          name="logo"
+          label="Logo"
+          valuePropName="fileList"
+          getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
+          rules={[{ required: true, message: 'Please upload the company logo!' }]}
         >
-          <h2 className="text-xl font-semibold mb-3">Service Information</h2>
-
-          <Form.Item
-            label="Service Title"
-            name="serviceTitle"
-            rules={[{ required: true, message: "Please input the service title!" }]}
-          >
-            <Input placeholder="Enter service title" />
-          </Form.Item>
-
-          <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: "Please input the description!" }]}
-          >
-            <Input.TextArea placeholder="Enter description" />
-          </Form.Item>
-
-          <Form.Item
-            label="Select Category"
-            name="category"
-            rules={[{ required: true, message: "Please select a category!" }]}
-          >
-            <Select placeholder="Select a category">
-              {categories.map((category) => (
-                <Select.Option key={category._id} value={category.category}>
-                  {category.category}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Site Link"
-            name="siteLink"
-            rules={[{ required: true, message: "Please input the site link!" }]}
-          >
-            <Input placeholder="Enter site link" />
-          </Form.Item>
-
-          <Form.Item
-            label="Image"
-            name="infoImage"
-            valuePropName="fileList"
-            getValueFromEvent={(e) => Array.isArray(e) ? e : e && e.fileList}
-            rules={[{ required: true, message: "Please upload an image!" }]}
-          >
-            <Upload
-              listType="picture"
-              beforeUpload={() => false}
-              onChange={handleFileChange}
-            >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            </Upload>
-          </Form.Item>
-
-          <Form.Item
-            label="Status"
-            name="status"
-            rules={[{ required: true, message: "Please select a status!" }]}
-          >
-            <Radio.Group>
-              <Radio value="active">Active</Radio>
-              <Radio value="pending">Pending</Radio>
-            </Radio.Group>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" className="bg-blue-500">
-              Save
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+          <Upload.Dragger name="files" listType="picture" beforeUpload={() => false}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+          </Upload.Dragger>
+        </Form.Item>
+        <Form.Item
+          name="companyName"
+          label="Company Name"
+          rules={[{ required: true, message: 'Please input the company name!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[
+            { required: true, message: 'Please input your email!' },
+            { type: 'email', message: 'Please enter a valid email!' },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item
+          name="confirmPassword"
+          label="Confirm Password"
+          dependencies={['password']}
+          hasFeedback
+          rules={[
+            { required: true, message: 'Please confirm your password!' },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('The two passwords that you entered do not match!'));
+              },
+            }),
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item
+          name="status"
+          label="Status"
+          rules={[{ required: true, message: 'Please select the company status!' }]}
+        >
+          <Select>
+            <Option value="active">Active</Option>
+            <Option value="pending">Pending</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" className='bg-blue-500 text-white' htmlType="submit">
+            Add Company
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
-    </>
   );
 }

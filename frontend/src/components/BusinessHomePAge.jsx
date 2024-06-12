@@ -469,7 +469,7 @@ const BusinessHomePAge = () => {
           </p>
 
           <div className=" w-10/12 flex justify-center items-center mt-[0.313rem] md:w-4/12">
-            <Link to={"/userRegistration"} >
+            <Link to={"/companyRegister"} >
               <button className=" bg-white  text-[#3578FA] rounded-sm p-[0.625rem]  text-[0.75rem] md:text-[1rem]">
                 Join <span className=" font-bold">Apna Connection</span> Now!
               </button>

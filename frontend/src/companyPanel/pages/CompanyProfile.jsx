@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Steps, Button, Form, Input, notification, Upload, DatePicker, TimePicker, Progress } from 'antd';
+import { Steps, Button, Form, Input, notification, Upload, DatePicker, TimePicker, Progress, Select } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import './Profile.css';  // Import your CSS file
 
 const { Step } = Steps;
+const { Option } = Select;
 
 const RegistrationStepper = () => {
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   const [progress, setProgress] = useState(0);
   const [userId, setUserId] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/v1/companyLogin')
@@ -29,6 +31,16 @@ const RegistrationStepper = () => {
         console.error('Error fetching data:', error);
       });
   }, [form]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/api/v1/category')
+      .then(response => {
+        setCategories(response.data.result);
+      })
+      .catch(error => {
+        console.error('Error fetching categories:', error);
+      });
+  }, []);
 
   const steps = [
     {
@@ -168,9 +180,15 @@ const RegistrationStepper = () => {
           <Form.Item
             name="category"
             label="Category"
-            rules={[{ required: true, message: 'Please enter your category' }]}
+            rules={[{ required: true, message: 'Please select your category' }]}
           >
-            <Input />
+            <Select>
+              {categories?.map(category => (
+                <Option key={category._id} value={category.category}>
+                  {category.category}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
         </>
       ),
@@ -240,12 +258,12 @@ const RegistrationStepper = () => {
 
   return (
     <div className="steps-container min-h-screen mt-20">
-      <div className="progress-circular-container w-full text-center  ">
-        <Progress type="circle" percent={ Math.floor(progress)}  />
-        <h2 className='mt-5 font-semibold ' > Profile Completion  </h2>
+      <div className="progress-circular-container w-full text-center">
+        <Progress type="circle" percent={Math.floor(progress)} />
+        <h2 className='mt-5 font-semibold'>Profile Completion</h2>
       </div>
-      <Steps current={current} className='mt-10' >
-        {steps.map((item, index) => (
+      <Steps current={current} className='mt-10'>
+        {steps?.map((item, index) => (
           <Step key={index} title={item.title} />
         ))}
       </Steps>
@@ -269,7 +287,6 @@ const RegistrationStepper = () => {
           )}
         </div>
       </Form>
-      
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { AiOutlineLike } from "react-icons/ai";
 import { IoShareSocialOutline, IoFlagOutline } from "react-icons/io5";
@@ -10,45 +10,37 @@ import { useGlobalContext } from "../utils/useContextApi";
 import {
   IMG36, IMG37, IMG38, IMG39, IMG41, IMG45, IMG46, IMG47, IMG48
 } from "../assets/images";
+import axios from "axios";
 
 const PublicReviewPage = () => {
-  const { addCompany, companyReview, replies, addReply } = useGlobalContext();
+  const { addCompany, companyReview, replies } = useGlobalContext();
   const { id } = useParams();
+  const [isProfile, setIsProfile] = useState([]);
+  const [likes, setLikes] = useState({});
 
   const company = addCompany?.find((elem) => elem._id === id);
   const reviews = companyReview?.filter((elem) => elem.companyID === id);
+  console.log("company review is", reviews);
 
-  const [replyFormVisible, setReplyFormVisible] = useState({});
-  const [replyText, setReplyText] = useState("");
-
-  const handleReplyButtonClick = (reviewID) => {
-    setReplyFormVisible((prev) => ({
-      ...prev,
-      [reviewID]: !prev[reviewID]
-    }));
-  };
-
-  const handleReplyChange = (e) => {
-    setReplyText(e.target.value);
-  };
-
-  const handleReplySubmit = (reviewID) => {
-    const newReply = {
-      reviewID,
-      text: replyText,
-      userName: "Current User", // Replace with actual user name
-      userPhoto: "path/to/user/photo", // Replace with actual user photo URL
-      createdAt: new Date().toISOString(),
-      isCompanyReply: false
+  useEffect(() => {
+    const fetchProfileAndLikes = async () => {
+      try {
+        const [profileResponse, likesResponse] = await Promise.all([
+          axios.get("http://localhost:3000/api/v1/"),
+          axios.get("http://localhost:3000/api/v1/like")
+        ]);
+        setIsProfile(profileResponse.data);
+        setLikes(likesResponse.data);
+      } catch (err) {
+        console.log("Error", err);
+      }
     };
-    addReply(newReply);
-    setReplyText("");
-    setReplyFormVisible((prev) => ({
-      ...prev,
-      [reviewID]: false
-    }));
-  };
+    fetchProfileAndLikes();
+  }, [isProfile?._id]);
+  console.log("profile is", isProfile);
 
+  console.log(likes)
+  const getLikes = likes?.result?.map((elem)=> elem.length  )
   const getTimeDifference = (createdAt) => {
     const prevDate = new Date(createdAt);
     const currentDate = new Date();
@@ -83,6 +75,28 @@ const PublicReviewPage = () => {
         <div className="text-sm">{reply.text}</div>
       </div>
     ));
+  };
+
+  const handleLike = async (reviewID) => {
+    try {
+      const response = await axios.post(`http://localhost:3000/api/v1/like`, {
+        likeBy: isProfile.name,
+        postID: reviewID,
+        userID: isProfile._id
+      });
+
+      // Update the local likes state based on the response
+      setLikes(prevLikes => ({
+        ...prevLikes,
+        [reviewID]: {
+          ...prevLikes[reviewID],
+          liked: !prevLikes[reviewID]?.liked,
+          count: response.data.likeCount
+        }
+      }));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -157,16 +171,9 @@ const PublicReviewPage = () => {
                 <div key={review._id} className="w-full bg-white flex flex-col mb-5">
                   <div className="w-11/12 mx-auto">
                     <div className="flex items-center pt-[5px]">
-                      <div className="bg-[#E3EFFB] p-[7px]">UN</div>
+                      <div> <img src={isProfile.profileImageURL} alt="" /> </div>
                       <div className="ml-[12px]">
-                        <div>uniacc01</div>
-                        <div className="flex items-center">
-                          <div className="text-[#6C6C85]">2 reviews</div>
-                          <div className="flex items-center ml-[14px]">
-                            <img loading="lazy" src={IMG41} alt="Country" className="h-[18px]" />
-                            <p className="ml-[5px] text-[#6C6C85]">CA</p>
-                          </div>
-                        </div>
+                        <div>{review.name}</div>
                       </div>
                     </div>
                     <hr className="my-[16px]" />
@@ -179,11 +186,12 @@ const PublicReviewPage = () => {
                     <hr className="my-[6px]" />
                     <div className="flex justify-between my-[12px]">
                       <div className="w-5/12 flex items-center md:w-4/12">
-                        <div className="flex items-center">
-                          <AiOutlineLike className="mr-[3px]" />
-                          <div className="text-[#6C6C85]">Useful</div>
-                        </div>
-                        <div className="flex items-center">
+                        <AiOutlineLike
+                          onClick={() => handleLike(review._id)}
+                          className={`mr-2 cursor-pointer `}
+                        />
+                        <div> Likes</div>
+                        <div className="flex items-center ml-4">
                           <IoShareSocialOutline className="mr-[3px]" />
                           <div className="text-[#6C6C85]">Share</div>
                         </div>
@@ -193,33 +201,6 @@ const PublicReviewPage = () => {
                       </div>
                     </div>
                     {renderReplies(review._id)}
-                    <div className="flex justify-end mt-2">
-                      <button
-                        onClick={() => handleReplyButtonClick(review._id)}
-                        className="text-blue-500 text-sm"
-                      >
-                        Reply
-                      </button>
-                    </div>
-                    {replyFormVisible[review._id] && (
-                      <div className="mt-2">
-                        <textarea
-                          value={replyText}
-                          onChange={handleReplyChange}
-                          className="w-full p-2 border border-gray-300 rounded"
-                          rows="3"
-                          placeholder="Write your reply..."
-                        ></textarea>
-                        <div className="flex justify-end mt-2">
-                          <button
-                            onClick={() => handleReplySubmit(review._id)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded"
-                          >
-                            Submit
-                          </button>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}

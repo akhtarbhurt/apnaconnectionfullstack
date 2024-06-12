@@ -40,6 +40,7 @@ import CompanyLogin from "./components/CompanyLogin";
 import CompanyRegisterr from "./components/CompanyRegister";
 import CompanyProfile from "./companyPanel/pages/CompanyProfile";
 import VerifyEmail from "../src/components/verifyEmail"
+import AddCompany from "./admin/pages/AddCompany";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -73,7 +74,6 @@ const [profile, setprofile] = useState(localStorage.getItem("apnaconnectionprofi
             <Route path="/footer" element={<Looter />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/forgetpassword" element={<Forgetpassword />} />
-            <Route path="/admin" element={<Main />} />
             <Route path="/userRegistration" element={<UserRegistration />} />
             <Route path="/logout"  element={ <Logout/>  } />
             <Route path="/seeAll" element={ <SeeAll/> } />
@@ -82,6 +82,12 @@ const [profile, setprofile] = useState(localStorage.getItem("apnaconnectionprofi
             <Route path="/companyLogin" element={ <CompanyLogin/> } />
             <Route path="/companyProfile" element={ <CompanyProfile /> } />
             <Route path="/verify-email/:id" element={ <VerifyEmail/> } />
+
+
+            {/* this is admin routes */}
+            <Route path="/admin/*" element={<Main />} />
+            <Route path="/admin" element={<Navigate to="/admin/home" replace />} />
+
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
