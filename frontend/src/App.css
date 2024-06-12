@@ -49,7 +49,7 @@ height:300px;
   }
 
   .ant-modal-mask{
-    background-color: transparent !important; /* Adjust the background color and opacity as needed */
+    background-color: rgba(199, 195, 195,0.4) !important; /* Adjust the background color and opacity as needed */
   }
 
   /* .userdashboardpopup > .ant-modal-footer{
