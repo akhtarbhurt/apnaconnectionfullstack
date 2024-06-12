@@ -24,9 +24,6 @@ export default function UserDashboard() {
   const [id ,setid] = useState("")
 const[loading,setloading]= useState(false)
 
-///reviews/:id
-
-
 
   useEffect(() => {
     function apicallinglogin() {

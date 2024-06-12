@@ -1,6 +1,6 @@
 import React from 'react'
 import  {img6} from '../assets/images';
-
+import { useEffect } from 'react';
 import '../App.css' 
 import Navbar from './Navbar';
 import Looter from './Looter';
