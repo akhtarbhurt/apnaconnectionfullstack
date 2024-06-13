@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -17,8 +18,15 @@ export default function UserDashboard() {
   const [review, setreview] = useState("");
   const [rating, setrating] = useState(0);
 
-  const [id ,setid] = useState("")
-const[loading,setloading]= useState(false)
+  const [id, setid] = useState("");
+  const [loading, setloading] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const ws = useRef(null);
+
+
+
+
 
 
 
