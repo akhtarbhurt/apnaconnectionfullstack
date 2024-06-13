@@ -42,7 +42,8 @@ import CompanyProfile from "./companyPanel/pages/CompanyProfile";
 import VerifyEmail from "../src/components/verifyEmail";
 import AddCompany from "./admin/pages/AddCompany";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import AllCategories from "./components/AllCategories"
+import UserProfile from "./components/UserProfile";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -92,6 +93,7 @@ function App() {
             <Route path="/mission" element={<Mission />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/apnanews" element={<ApnaNews />} />
+
             <Route
               path="/publicreviewpage/:id"
               element={<PublicReviewPage />}
@@ -106,9 +108,11 @@ function App() {
             <Route path="/companyLogin" element={<CompanyLogin />} />
             <Route path="/companyProfile" element={<CompanyProfile />} />
             <Route path="/verify-email/:id" element={<VerifyEmail />} />
-
-            {/* this is admin routes */}
+< Route path="/userprofile" element={<UserProfile />}/>
+<Route path="/allcategories" element = {< AllCategories/>} />
+           
             <Route path="/admin/*" element={<Main />} />
+
             <Route
               path="/admin"
               element={<Navigate to="/admin/home" replace />}
@@ -121,6 +125,7 @@ function App() {
               path="/companyPanel"
               element={<Navigate to={"/companyPanel/home"} />}
             />
+            
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

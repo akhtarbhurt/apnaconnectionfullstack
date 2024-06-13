@@ -182,7 +182,6 @@ if (password) {
       updateData.profileImageURL = result.url;
       console.log("file checking inside",result)
     }
-
     // Find and update user with the update object
     const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
     console.log("file path checking outside",req.file)

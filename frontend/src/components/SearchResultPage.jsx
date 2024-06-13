@@ -64,7 +64,7 @@ const SearchResultPage = () => {
       <Popup />
       <div className='w-full h-full'>
         <Navbar />
-        <div className='w-full bg-[#051D4D] mt-10 flex justify-center items-center flex-col py-3 md:flex-row'>
+        <div className='w-full bg-[#dbdcdd] mt-[5rem]  flex justify-center items-center flex-col py-3 md:flex-row'>
           <div className='w-full flex items-center justify-between md:w-9/12 lg:w-8/12 px-4'>
             <div className='text-white text-center text-sm md:text-left md:w-3/12'>
               145 results for "All categories"
