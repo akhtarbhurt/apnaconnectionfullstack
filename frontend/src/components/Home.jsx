@@ -18,6 +18,7 @@ import { Button, Dropdown, Modal, Space } from "antd";
 import axios from "axios";
 import usecotextFunction from "../utils/useContext";
 import { useGlobalContext } from "../utils/useContextApi";
+import { useNavigate } from "react-router-dom";
 axios.defaults.withCredentials = true;
 
 export default function Home() {
@@ -26,9 +27,14 @@ export default function Home() {
   const [isSticky, setIsSticky] = useState(false);
   const [isProfile, setIsProfile] = useState([]);
   const [warning, setWarning] = useState(null);
+  const [inputname, setinputName] = useState("");
+  const [categories, setCategories] = useState("");
   const [isWarningVisible, setIsWarningVisible] = useState(false);
-  const { heading, categorys, sections } = useGlobalContext();
+  const [displaydatafromapi,setdisplaydatafromapi] = useState([])
+  const [showAll, setShowAll] = useState(false);
 
+  const navigate = useNavigate();
+  const { heading, categorys, sections } = useGlobalContext();
   const {
     profile,
     setprofile,
@@ -39,68 +45,54 @@ export default function Home() {
     name,
     setName,
   } = usecotextFunction();
-  
+
   setprofile(localStorage.getItem("apnaconnectionprofile"));
   setprofilesrc(localStorage.getItem("tokenapnaconnection"));
   setDashboard(localStorage.getItem("apnaconnectionadmin"));
-console.log("checking",profile,profilesrc,dashboard)
-  // axios
-  //   .get("http://localhost:3000/api/v1/login")
-  //   .then((res) => {
-  //     console.log("token matched", res, "statevalue", profile);
-  //     // alert("token matched restrict to")
-  //     // setprofilesrc(res.data.profileImageURL);
-  //     // setprofile(true);
-  //   })
-  //   .catch((err) => {
-  //     console.log("token not matched", err);
-  //     setprofile(false);
-  //   });
+  // console.log("checking",profile,profilesrc,dashboard)
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
+        setIsProfile(response.data);
+      } catch (err) {
+        console.log("Error", err);
+      }
+    };
+    fetchProfile();
+  },  [isProfile]);
 
-    useEffect(() => {
-      const fetchProfile = async () => {
-        try {
-          const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
-          setIsProfile(response.data);
-          
-        } catch (err) {
-          console.log("Error", err);
-        }
-      };
-      fetchProfile();
-    }, [isProfile]);
-    console.log("your profile is", isProfile._id)
+  // console.log("your profile is", isProfile._id)
 
-    useEffect(() => {
-      const ws = new WebSocket('ws://localhost:8080'); // Adjust WebSocket URL if necessary
-  
-      ws.onopen = () => {
-        console.log('WebSocket connection established');
-      };
-  
-      ws.onmessage = (message) => {
-        const data = JSON.parse(message.data);
-        if (data.type === 'new-warning' && data.data.userID === isProfile._id) {
-          setWarning(data.data.warningText);
-          console.log( "web socket is", data.data.warningText)
-          setIsWarningVisible(true);
-        }
-      };
-  
-      ws.onclose = () => {
-        console.log('WebSocket connection closed');
-      };
-  
-      return () => {
-        ws.close();
-      };
-    }, [isProfile._id, isProfile]);
-  
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8080"); // Adjust WebSocket URL if necessary
+
+    ws.onopen = () => {
+      // console.log('WebSocket connection established');
+    };
+
+    ws.onmessage = (message) => {
+      const data = JSON.parse(message.data);
+      if (data.type === "new-warning" && data.data.userID === isProfile._id) {
+        setWarning(data.data.warningText);
+        console.log("web socket is", data.data.warningText);
+        setIsWarningVisible(true);
+      }
+    };
+
+    ws.onclose = () => {
+      // console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [isProfile._id, isProfile]);
+
   const handleWarningOk = () => {
     setIsWarningVisible(false);
   };
-
 
   useEffect(() => {
     // ============profile===========
@@ -129,10 +121,46 @@ console.log("checking",profile,profilesrc,dashboard)
     setHamberg(true);
     setHambergexp(false);
   }
+  function onsubmitFetchingdata(e) {
+    e.preventDefault();
+    let companyname = inputname.toLowerCase();
+    let categoryinput = categories.toLowerCase();
+    console.log('categories is', categories.toLowerCase())
+    console.log(companyname, categoryinput);
 
-  // function expandProfile() {
-  //   setExpand(!expand);
-  // }
+    const fetchUserReg = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/userReg"
+        );
+
+        let datas = response.data.result;
+        console.log(datas);
+
+        let getfiltereddata = datas?.filter((data,ind) => {
+          
+          return (
+
+            categoryinput.trim() === data?.category?.toLowerCase().trim() &&
+            data?.companyName?.toLowerCase().includes(companyname) 
+
+
+          )
+          
+          
+          
+        });
+        console.log("filtered data", getfiltereddata);
+        setdisplaydatafromapi(getfiltereddata)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserReg();
+   
+    // navigate(`/searchresultpage/${categories}`)
+  }
 
   const items = [
     {
@@ -145,11 +173,30 @@ console.log("checking",profile,profilesrc,dashboard)
     },
   ];
 
+
+  // ===========modal===========
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+    setCategories("")
+    setinputName("")
+    
+  };
+  const handleCancel = () => {
+   
+    setIsModalOpen(false);
+    setCategories("")
+    setinputName("")
+  };
+
   return (
     <>
       {/* ==========navbar========== */}
 
-       <Modal
+      <Modal
         title="Important Notice"
         visible={isWarningVisible}
         onOk={handleWarningOk}
@@ -158,13 +205,11 @@ console.log("checking",profile,profilesrc,dashboard)
         <p>{warning}</p>
       </Modal>
 
-
-
       <section className="  relative homepage font-poppins">
         <div className=" w-full h-screen">
-          {heading?.map((elem) => {
+          {heading?.map((elem, ind) => {
             return (
-              <div key={elem._id}>
+              <div key={ind}>
                 <img
                   src={elem.bgImage}
                   alt=""
@@ -289,9 +334,9 @@ console.log("checking",profile,profilesrc,dashboard)
           >
             <div className="mt-28">
               <div className=" hidden sm:hidden md:hidden lg:block ">
-                {heading?.map((elem) => {
+                {heading?.map((elem, ind) => {
                   return (
-                    <div key={elem._id}>
+                    <div key={ind}>
                       <p className="text-4xl text-white font-bold text-center ">
                         {elem.mainHeading}
                       </p>
@@ -302,41 +347,73 @@ console.log("checking",profile,profilesrc,dashboard)
                   );
                 })}
               </div>
-              <div
+              <form
                 className={`border-white relative   flex flex-col sm:flex-col md:flex-col lg:flex-row lg:mt-10  justify-center `}
+                onSubmit={onsubmitFetchingdata}
               >
                 <input
                   type="text"
+                  value={inputname}
                   className=" w-[100vw] sm:w-[100vw] md:w-[80vw] font-bold   lg:w-[30vw] p-3 bg-[#274D9A] bg-opacity-50 border border-white text-white placeholder-white"
                   placeholder="What are you looking for"
+                  onChange={(e) => setinputName(e.target.value)}
                 />
                 <select
                   name=""
                   id=""
+                  value={categories}
+                  onChange={(e) => setCategories(e.target.value)} // Handle category change
                   className="w-[100vw] sm:w-[100vw] md:w-[80vw] font-bold lg:w-[30vw] mt-5 sm:mt-5 md:mt-5 lg:mt-0 p-3 bg-[#274D9A] bg-opacity-50 border border-white text-white"
                 >
-                  <option value="" defaultValue={true} disabled>
-                    {" "}
-                    select a option{" "}
+                  <option value="" selected defaultValue={true} disabled>
+                    Select Category
                   </option>
                   {categorys?.map((elem, index) => (
-                    <>
-                      <option key={index} value="">
-                        {elem.category}
-                      </option>
-                    </>
+                    <option key={index} value={elem.category}>
+                      {" "}
+                      {/* Use category value */}
+                      {elem.category}
+                    </option>
                   ))}
                 </select>
 
                 <div className="mx-3  mt-5 sm:mt-5 md:mt-5 lg:mt-0 ">
-                  <button className="bg-blue-700 text-white border border-blue-500 p-3 w-[100%] px-10 ">
-                    Search
+       
+                <button
+                  onClick={showModal}
+                    type="submit"
+                    className="bg-blue-700 text-white border border-blue-500 p-3 w-[100%] px-10 "
+                  >
+                 Search
                   </button>
+     
+      <Modal className=""  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+      footer={null}
+      width={800}
+      >
+ {displaydatafromapi.length > 0 ? (
+    displaydatafromapi.map((data, ind) => (
+      <div key={ind} className=" mt-6" >
+        <div className=" flex">
+        <Link to={`publicreviewpage/${data._id}`} className="text-blue-600 text-[18px]">
+          {data.companyName}
+        </Link>
+        <p className="mx-3 text-blue-600 text-[18px]">|</p>
+        <p className="text-blue-600 text-[18px]">{data.siteLink}</p>
+        </div>
+        <div className="mt-2 text-blue-600 ">{data.description}</div>
+      </div>
+    ))
+  ) : (
+    <div>No data found</div>
+  )}
+        
+      </Modal>
                 </div>
-              </div>
-              {heading?.map((elem) => {
+              </form>
+              {heading?.map((elem, ind) => {
                 return (
-                  <div key={elem._id}>
+                  <div key={ind}>
                     <div className=" hidden sm:hidden md:hidden lg:flex  w-[100%]   justify-center bg-[#274D9A] bg-opacity-50 px-3 text-white mt-10 p-5 ">
                       <div className=" w-[20vw] flex items-center  ">
                         <h3>{elem.apnaConnectionHeading}</h3>
@@ -356,10 +433,10 @@ console.log("checking",profile,profilesrc,dashboard)
             <h2>Explore Categories </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4   place-items-center">
-            {categorys?.map((elem) => {
+            {/* {categorys?.map((elem, ind) => {
               return (
                 <Link to={`/searchresultpage/${elem.category}`}>
-                  <div key={elem._id}>
+                  <div key={ind}>
                     <div className=" w-[50vw] sm:w-[40vw] md:w-[40vw]  h-[18vh]  lg:w-[14vw] flex lg:h-[18vh] sm:mt-5 lg:mt-0 justify-evenly items-center flex-col bg-white border shadow-md capitalize hover:cursor-pointer  hover:scale-110 transform transition duration-1000 ease-in-out mb-4 hover:bg-blue-500 hover:text-white ">
                       <div className=" flex justify-center flex-col ">
                         <img
@@ -372,22 +449,42 @@ console.log("checking",profile,profilesrc,dashboard)
                     </div>
                   </div>
                 </Link>
-              );
-            })}
+              )
+            })} */}
+              {categorys?.slice(0, showAll ? categorys.length : 6).map((elem, ind) => {
+        return (
+          <Link to={`/searchresultpage/${elem.category}`} key={ind}>
+            <div>
+              <div className="w-[50vw] sm:w-[40vw] md:w-[40vw] h-[18vh] lg:w-[14vw] flex lg:h-[18vh] sm:mt-5 lg:mt-0 justify-evenly items-center flex-col bg-white border shadow-md capitalize hover:cursor-pointer hover:scale-110 transform transition duration-1000 ease-in-out mb-4 hover:bg-blue-500 hover:text-white">
+                <div className="flex justify-center flex-col">
+                  <img
+                    src={elem.catImage}
+                    alt="insurance img"
+                    className="h-[30px]"
+                  />
+                  <h3 className="mt-3 text-[13px]">{elem.category}</h3>
+                </div>
+              </div>
+            </div>
+          </Link>
+        );
+      })}
           </div>
         </div>
       </section>
 
       <section className=" relative -top-12">
         <div className="w-full text-center">
-          <button className="bg-orange-500 rounded-sm p-2 text-white px-10 hover:scale-110 transform transition duration-1000 ease-in-out">
-            view all categories
+          <button 
+            onClick={() => setShowAll(!showAll)}
+          className="bg-orange-500 rounded-sm p-2 text-white px-10 hover:scale-110 transform transition duration-1000 ease-in-out">
+             {showAll ? "Show Less" : "View All Categories"}
           </button>
         </div>
       </section>
-      {sections?.map((elem) => {
+      {sections?.map((elem, ind) => {
         return (
-          <div key={elem._id}>
+          <div key={ind}>
             <section className=" mt-6">
               <div className="parallax relative h-[60vh]">
                 <img
@@ -412,7 +509,7 @@ console.log("checking",profile,profilesrc,dashboard)
       })}
 
       <section className="relative z-10">
-        <Slider />
+        {/* <Slider /> */}
         <Testamonial />
       </section>
       <div>
