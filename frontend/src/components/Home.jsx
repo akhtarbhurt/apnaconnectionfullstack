@@ -31,6 +31,8 @@ export default function Home() {
   const [categories, setCategories] = useState("");
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const [displaydatafromapi,setdisplaydatafromapi] = useState([])
+  const [showAll, setShowAll] = useState(false);
+
   const navigate = useNavigate();
   const { heading, categorys, sections } = useGlobalContext();
   const {
@@ -59,7 +61,7 @@ export default function Home() {
       }
     };
     fetchProfile();
-  }, []);
+  },  [isProfile]);
 
   // console.log("your profile is", isProfile._id)
 
@@ -86,7 +88,7 @@ export default function Home() {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [isProfile._id, isProfile]);
 
   const handleWarningOk = () => {
     setIsWarningVisible(false);
@@ -138,8 +140,11 @@ export default function Home() {
         let getfiltereddata = datas?.filter((data,ind) => {
           
           return (
+
             categoryinput.trim() === data?.category?.toLowerCase().trim() &&
-            data?.companyName?.toLowerCase() === companyname
+            data?.companyName?.toLowerCase().includes(companyname) 
+
+
           )
           
           
@@ -153,7 +158,7 @@ export default function Home() {
     };
 
     fetchUserReg();
-
+   
     // navigate(`/searchresultpage/${categories}`)
   }
 
@@ -176,9 +181,15 @@ export default function Home() {
   };
   const handleOk = () => {
     setIsModalOpen(false);
+    setCategories("")
+    setinputName("")
+    
   };
   const handleCancel = () => {
+   
     setIsModalOpen(false);
+    setCategories("")
+    setinputName("")
   };
 
   return (
@@ -342,6 +353,7 @@ export default function Home() {
               >
                 <input
                   type="text"
+                  value={inputname}
                   className=" w-[100vw] sm:w-[100vw] md:w-[80vw] font-bold   lg:w-[30vw] p-3 bg-[#274D9A] bg-opacity-50 border border-white text-white placeholder-white"
                   placeholder="What are you looking for"
                   onChange={(e) => setinputName(e.target.value)}
@@ -349,6 +361,7 @@ export default function Home() {
                 <select
                   name=""
                   id=""
+                  value={categories}
                   onChange={(e) => setCategories(e.target.value)} // Handle category change
                   className="w-[100vw] sm:w-[100vw] md:w-[80vw] font-bold lg:w-[30vw] mt-5 sm:mt-5 md:mt-5 lg:mt-0 p-3 bg-[#274D9A] bg-opacity-50 border border-white text-white"
                 >
@@ -374,11 +387,27 @@ export default function Home() {
                  Search
                   </button>
      
-      <Modal  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+      <Modal className=""  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
       footer={null}
+      width={800}
       >
-
-        <div>ok</div>
+ {displaydatafromapi.length > 0 ? (
+    displaydatafromapi.map((data, ind) => (
+      <div key={ind} className=" mt-6" >
+        <div className=" flex">
+        <Link to={`publicreviewpage/${data._id}`} className="text-blue-600 text-[18px]">
+          {data.companyName}
+        </Link>
+        <p className="mx-3 text-blue-600 text-[18px]">|</p>
+        <p className="text-blue-600 text-[18px]">{data.siteLink}</p>
+        </div>
+        <div className="mt-2 text-blue-600 ">{data.description}</div>
+      </div>
+    ))
+  ) : (
+    <div>No data found</div>
+  )}
+        
       </Modal>
                 </div>
               </form>
@@ -404,7 +433,7 @@ export default function Home() {
             <h2>Explore Categories </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4   place-items-center">
-            {categorys?.map((elem, ind) => {
+            {/* {categorys?.map((elem, ind) => {
               return (
                 <Link to={`/searchresultpage/${elem.category}`}>
                   <div key={ind}>
@@ -420,16 +449,36 @@ export default function Home() {
                     </div>
                   </div>
                 </Link>
-              );
-            })}
+              )
+            })} */}
+              {categorys?.slice(0, showAll ? categorys.length : 6).map((elem, ind) => {
+        return (
+          <Link to={`/searchresultpage/${elem.category}`} key={ind}>
+            <div>
+              <div className="w-[50vw] sm:w-[40vw] md:w-[40vw] h-[18vh] lg:w-[14vw] flex lg:h-[18vh] sm:mt-5 lg:mt-0 justify-evenly items-center flex-col bg-white border shadow-md capitalize hover:cursor-pointer hover:scale-110 transform transition duration-1000 ease-in-out mb-4 hover:bg-blue-500 hover:text-white">
+                <div className="flex justify-center flex-col">
+                  <img
+                    src={elem.catImage}
+                    alt="insurance img"
+                    className="h-[30px]"
+                  />
+                  <h3 className="mt-3 text-[13px]">{elem.category}</h3>
+                </div>
+              </div>
+            </div>
+          </Link>
+        );
+      })}
           </div>
         </div>
       </section>
 
       <section className=" relative -top-12">
         <div className="w-full text-center">
-          <button className="bg-orange-500 rounded-sm p-2 text-white px-10 hover:scale-110 transform transition duration-1000 ease-in-out">
-            view all categories
+          <button 
+            onClick={() => setShowAll(!showAll)}
+          className="bg-orange-500 rounded-sm p-2 text-white px-10 hover:scale-110 transform transition duration-1000 ease-in-out">
+             {showAll ? "Show Less" : "View All Categories"}
           </button>
         </div>
       </section>
