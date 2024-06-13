@@ -31,7 +31,6 @@ export default function Home() {
   const [categories, setCategories] = useState("");
   const [isWarningVisible, setIsWarningVisible] = useState(false);
   const [displaydatafromapi,setdisplaydatafromapi] = useState([])
-  const [showAll, setShowAll] = useState(false);
 
   const navigate = useNavigate();
   const { heading, categorys, sections } = useGlobalContext();
@@ -165,7 +164,7 @@ export default function Home() {
   const items = [
     {
       key: "1",
-      label: <Link to={"/userdashboard"}>Profile</Link>,
+      label: <Link to={"/userprofile"}>Profile</Link>,
     },
     {
       key: "2",
@@ -451,7 +450,7 @@ export default function Home() {
                 </Link>
               )
             })} */}
-              {categorys?.slice(0, showAll ? categorys.length : 6).map((elem, ind) => {
+              {categorys?.slice(0, 6).map((elem, ind) => {
         return (
           <Link to={`/searchresultpage/${elem.category}`} key={ind}>
             <div>
@@ -476,9 +475,9 @@ export default function Home() {
       <section className=" relative -top-12">
         <div className="w-full text-center">
           <button 
-            onClick={() => setShowAll(!showAll)}
+           
           className="bg-orange-500 rounded-sm p-2 text-white px-10 hover:scale-110 transform transition duration-1000 ease-in-out">
-             {showAll ? "Show Less" : "View All Categories"}
+           <Link to={'/allcategories'}>   View All Categories</Link>
           </button>
         </div>
       </section>

@@ -29,7 +29,7 @@ setprofile(localStorage.getItem("apnaconnectionprofile"));
   const items = [
     {
       key: "1",
-      label: <Link to={"/profile"}>Profile</Link>,
+      label: <Link to={"/userprofile"}>Profile</Link>,
     },
     {
       key: "2",
