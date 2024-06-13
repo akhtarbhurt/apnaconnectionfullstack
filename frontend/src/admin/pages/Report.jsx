@@ -8,7 +8,6 @@ export default function Report() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentReview, setCurrentReview] = useState({});
   const [warningText, setWarningText] = useState('');
-  const [onetimepopup,SetoneTimePopup] = useState(false)
 
   useEffect(() => {
     const fetchReportedReviews = async () => {
@@ -16,9 +15,10 @@ export default function Report() {
       try {
         const response = await axios.get('http://localhost:3000/api/v1/reportedReviews');
         const reportedReviews = response.data.result.reverse();
-        
+
         // Map the data to match the table's data structure
         const formattedData = reportedReviews.map((review, index) => ({
+          _id: review._id,
           key: index,
           companyName: review.companyName,
           message: review.message,
@@ -26,7 +26,7 @@ export default function Report() {
           report: review.action,
           userName: review.userName,
           warning: review.warning,
-          userID: review.userID,  // Ensure userID is included
+          userID: review.userID, // Ensure userID is included
           reviewId: review.reviewId, // Include reviewId for deletion
         }));
 
@@ -40,58 +40,57 @@ export default function Report() {
     };
 
     fetchReportedReviews();
-  }, [currentReview.reviewId]);
+  }, []);
 
   const showModal = (review) => {
     setCurrentReview(review);
     setIsModalVisible(true);
   };
 
- // Add WebSocket broadcast call to handleOk function
-const handleOk = async () => {
-  if (currentReview && currentReview.userID) {
-    const warningPayload = {
-      userID: currentReview.userID,
-      warningText: warningText,
-      warningNumber: currentReview.warning ? currentReview.warning.length + 1 : 1,
-      reviewId: currentReview.reviewId // Include reviewId in the payload
-    };
+  // Add WebSocket broadcast call to handleOk function
+  const handleOk = async () => {
+    if (currentReview && currentReview.userID) {
+      const warningPayload = {
+        userID: currentReview.userID,
+        warningText: warningText,
+        warningNumber: currentReview.warning ? currentReview.warning.length + 1 : 1,
+        reviewId: currentReview.reviewId, // Include reviewId in the payload
+      };
 
-    try {
-      await axios.post('http://localhost:3000/api/v1/warning', warningPayload);
-      notification.success({ message: 'Warning generated successfully' });
+      try {
+        await axios.post('http://localhost:3000/api/v1/warning', warningPayload);
+        notification.success({ message: 'Warning generated successfully' });
 
-      // Update the local dataSource state to reflect the new warning
-      setDataSource(prevDataSource => 
-        prevDataSource.map(item => 
-          item.key === currentReview.key ? { ...item, warning: [...(item.warning || []), warningText] } : item
-        )
-      );
+        // Update the local dataSource state to reflect the new warning
+        setDataSource((prevDataSource) =>
+          prevDataSource.map((item) =>
+            item.key === currentReview.key ? { ...item, warning: [...(item.warning || []), warningText] } : item
+          )
+        );
 
-      setIsModalVisible(false);
-      setWarningText('');
-    } catch (error) {
-      console.error('Failed to generate warning', error);
-      notification.error({ message: 'Failed to generate warning' });
+        setIsModalVisible(false);
+        setWarningText('');
+      } catch (error) {
+        console.error('Failed to generate warning', error);
+        notification.error({ message: 'Failed to generate warning' });
+      }
+    } else {
+      notification.error({ message: 'UserID is missing for the current review' });
     }
-  } else {
-    notification.error({ message: 'UserID is missing for the current review' });
-  }
-};
+  };
 
   const handleCancel = () => {
     setIsModalVisible(false);
     setWarningText('');
   };
-
+  console.log("current review is", dataSource)
   const deleteReview = async () => {
     try {
       await axios.delete(`http://localhost:3000/api/v1/reviews/${currentReview.reviewId}`);
+      await axios.delete(`http://localhost:3000/api/v1/reportedReviews/${currentReview._id}`)
       notification.success({ message: 'Review deleted successfully' });
 
-      // Update the local dataSource state to reflect the deletion
-      setDataSource(prevDataSource => prevDataSource.filter(item => item.key !== currentReview.key));
-
+      
       setIsModalVisible(false);
     } catch (error) {
       console.error('Failed to delete review', error);
@@ -139,6 +138,7 @@ const handleOk = async () => {
       title: 'Warning',
       dataIndex: 'warning',
       key: 'warning',
+      render: (warnings) => (warnings ? warnings.join(', ') : ''),
     },
     {
       title: 'Action',
@@ -153,7 +153,6 @@ const handleOk = async () => {
       ),
     },
   ];
-
 
   return (
     <div className='w-full min-h-screen p-5'>

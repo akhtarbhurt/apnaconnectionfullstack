@@ -1,8 +1,9 @@
 import CompanyNotification from "../models/companyNotification.models.js";
-
 import { Reviews } from "../models/review.models.js";
 import { broadcast } from "../index.js"; // Import the broadcast function
 import { Reply } from "../models/reply.models.js";
+import Notification from "../models/notification.models.js";
+import { UserRegistration } from "../models/userRegistration.models.js";
 
 const reviewsController = async (req, res) => {
   try {
@@ -36,7 +37,6 @@ const reviewsController = async (req, res) => {
   }
 };
 
-
 const getReviewController = async (req, res) => {
   try {
     const payload = await Reviews.find();
@@ -62,6 +62,7 @@ const updateReviewController = async (req, res) => {
     return res.status(200).json({ payload });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: "internal server error" });
   }
 };
 
@@ -75,6 +76,7 @@ const deleteReviewController = async (req, res) => {
     return res.status(200).json({ payload });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: "internal server error" });
   }
 };
 
@@ -91,6 +93,7 @@ const companyReviewController = async (req, res) => {
     return res.status(500).json({ error: "internal server error" });
   }
 };
+
 const userReviewController = async (req, res) => {
   try {
     const { userID } = req.params;
@@ -126,9 +129,19 @@ const addReplyController = async (req, res) => {
       return res.status(400).json({ error: "Reply not created" });
     }
 
+    // Create a notification for the user
+    const notification = await Notification.create({
+      userID: review.userID,
+      text: `Company replied to your review: "${text}"`,
+    });
+
+    // Broadcast the new reply and notification to WebSocket clients
     broadcast({
       type: 'new_reply',
-      data: reply
+      data: {
+        reply,
+        notification,
+      }
     });
 
     return res.status(200).json({ message: "Reply added successfully", result: reply });
@@ -137,7 +150,6 @@ const addReplyController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 const getRepliesController = async (req, res) => {
   try {
@@ -151,10 +163,6 @@ const getRepliesController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
-
 
 export {
   reviewsController,

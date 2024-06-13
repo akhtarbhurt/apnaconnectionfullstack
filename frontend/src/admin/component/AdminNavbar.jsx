@@ -133,7 +133,7 @@ export default function AdminNavbar() {
       {isNotificationActive && (
         <div
           ref={notificationDropdownRef}
-          className="absolute right-16 top-12 bg-white shadow-lg border rounded w-64"
+          className="absolute right-16 top-12 bg-white shadow-lg border rounded w-64 z-20 "
         >
           <div className="flex justify-between items-center p-4 border-b">
             <span className="font-bold">Notifications</span>
@@ -154,7 +154,11 @@ export default function AdminNavbar() {
                 {notification.message}
               </div>
             ))}
+            
           </div>
+          <div className=" p-2 capitalize text-center border-t">
+              <Link to="/admin/seeAll" className="text-blue-500">See All</Link>
+            </div>
         </div>
       )}
 

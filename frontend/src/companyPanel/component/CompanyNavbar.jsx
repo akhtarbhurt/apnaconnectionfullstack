@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { IoIosNotifications } from "react-icons/io";
 import { profilePic } from "../../assets/images";
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 export default function CompanyNavbar({ handleTabs }) {
   const [isProfileActive, setIsProfileActive] = useState(false);
@@ -13,14 +15,23 @@ export default function CompanyNavbar({ handleTabs }) {
   const notificationButtonRef = useRef(null);
   const [companyID, setCompanyID] = useState(null);
 
+  const navigate = useNavigate();
+
+  
+  
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const companyIDResponse = await axios.get(`http://localhost:3000/api/v1/companyLogin`);
+        const companyIDResponse = await axios.get(
+          `http://localhost:3000/api/v1/companyLogin`
+        );
         const companyID = companyIDResponse.data.result._id;
         setCompanyID(companyID);
 
-        const response = await axios.get(`http://localhost:3000/api/v1/notifications/${companyID}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/notifications/${companyID}`
+        );
         setNotifications(response.data.notifications);
       } catch (error) {
         console.error("Failed to fetch notifications", error);
@@ -32,21 +43,21 @@ export default function CompanyNavbar({ handleTabs }) {
 
   // WebSocket setup
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8080');
+    const ws = new WebSocket("ws://localhost:8080");
 
     ws.onopen = () => {
-      console.log('Connected to WebSocket');
+      console.log("Connected to WebSocket");
     };
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      if (message.type === 'new_notification') {
+      if (message.type === "new_notification") {
         setNotifications((prev) => [message.data, ...prev]);
       }
     };
 
     ws.onclose = () => {
-      console.log('Disconnected from WebSocket');
+      console.log("Disconnected from WebSocket");
     };
 
     return () => {
@@ -56,10 +67,14 @@ export default function CompanyNavbar({ handleTabs }) {
 
   const handleMarkAsSeen = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/api/v1/notifications/mark-as-seen/${id}`);
+      await axios.put(
+        `http://localhost:3000/api/v1/notifications/mark-as-seen/${id}`
+      );
       setNotifications((notifications) =>
         notifications.map((notification) =>
-          notification._id === id ? { ...notification, seen: true } : notification
+          notification._id === id
+            ? { ...notification, seen: true }
+            : notification
         )
       );
     } catch (error) {
@@ -105,11 +120,27 @@ export default function CompanyNavbar({ handleTabs }) {
     // If opening the dropdown, mark all notifications as seen
     if (!isNotificationActive && companyID) {
       try {
-        await axios.put(`http://localhost:3000/api/v1/notifications/mark-all-as-seen`, { companyID });
-        setNotifications((notifications) => notifications.map((notification) => ({ ...notification, seen: true })));
+        await axios.put(
+          `http://localhost:3000/api/v1/notifications/mark-all-as-seen`,
+          { companyID }
+        );
+        setNotifications((notifications) =>
+          notifications.map((notification) => ({ ...notification, seen: true }))
+        );
       } catch (error) {
         console.error("Failed to mark all notifications as seen", error);
       }
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:3000/api/v1/companyLogout', {}, { withCredentials: true });
+      message.success('Logout successful');
+      window.location.href = '/companyLogin';
+    } catch (error) {
+      console.error('Logout error:', error);
+      message.error('Logout failed: An unknown error occurred');
     }
   };
 
@@ -157,14 +188,16 @@ export default function CompanyNavbar({ handleTabs }) {
           } origin-top`}
         >
           <ul>
+            <Link to={'/companyPanel/companyProfile'} >
             <li
               className="mb-3 hover:text-customOrange cursor-pointer transition-colors duration-300"
               onClick={() => handleTabs("profile")}
             >
               Profile
             </li>
+            </Link>
             <hr className="w-full mb-3" />
-            <li className="hover:text-customOrange cursor-pointer transition-colors duration-300">
+            <li className="hover:text-customOrange cursor-pointer transition-colors duration-300" onClick={handleLogout} >
               Logout
             </li>
           </ul>
@@ -174,10 +207,12 @@ export default function CompanyNavbar({ handleTabs }) {
         <div
           ref={notificationDropdownRef}
           className={`absolute top-14 right-14 z-10 bg-white w-[250px] rounded-md shadow-md border px-4 py-2 cursor-auto transform transition-transform duration-300 ease-in-out ${
-            isNotificationActive ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+            isNotificationActive
+              ? "scale-y-100 opacity-100"
+              : "scale-y-0 opacity-0"
           } origin-top`}
         >
-          <ul className=" h-[20vh] overflow-x-auto " >
+          <ul className=" h-[20vh] overflow-x-auto ">
             {notifications.length > 0 ? (
               notifications.map((notification) => (
                 <li
@@ -197,6 +232,9 @@ export default function CompanyNavbar({ handleTabs }) {
               <li className="text-gray-500">No notifications</li>
             )}
           </ul>
+          <Link to={'/companyPanel/companyNotification'} >
+            <div className="text-center p-2 flex items-center justify-center ">see all</div>
+          </Link>
         </div>
       </div>
     </div>

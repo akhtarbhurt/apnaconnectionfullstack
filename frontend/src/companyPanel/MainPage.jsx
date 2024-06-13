@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import CompanySidebar from "./component/CompanySidebar";
 import CompanyProfile from "./pages/CompanyProfile";
 import ReviewManagement from "./pages/ReviewManagement";
+import { Route, Routes } from "react-router-dom";
+import CompanyNotificationSeeAll from "./pages/CompanyNotificationSeeAll";
 
 export default function MainPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -47,9 +49,12 @@ export default function MainPage() {
           </div>
         </div>
         <div className="w-full max-w-5xl m-auto">
-          {activeTab === "home" && <Home />}
-          {activeTab === "profile" && <CompanyProfile />}
-          {activeTab === "reviewManagement" && <ReviewManagement />}
+         <Routes>
+          <Route  path="home" element={ <Home/> } />
+          <Route  path="companyProfile" element={ <CompanyProfile/> } />
+          <Route  path="companyNotification" element={ <CompanyNotificationSeeAll/> } />
+          <Route  path="reviewManagement" element={ <ReviewManagement/> } />
+         </Routes>
         </div>
       </div>
     </div>
