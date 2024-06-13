@@ -16,11 +16,11 @@ export default function UserDashboard() {
   const [currentReview, setCurrentReview] = useState({});
   const [review, setreview] = useState("");
   const [rating, setrating] = useState(0);
-  const [id, setid] = useState("");
-  const [loading, setloading] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const ws = useRef(null);
+
+  const [id ,setid] = useState("")
+const[loading,setloading]= useState(false)
+
+
 
   useEffect(() => {
     function apicallinglogin() {
