@@ -1,7 +1,7 @@
 import { Router, response } from "express";
   const router = Router();
   import User from "../models/user.models.js";
-  import {handleregister} from "../controllers/user.auth.controllers.js"
+  import {blockUser, handleregister, unblockUser} from "../controllers/user.auth.controllers.js"
   import handlelogin from "../controllers/login.controllers.js"
   import { handleUpdateregister } from "../controllers/user.auth.controllers.js";
   import  { checkforauthenticationcookie } from "../middleware/authentication.middleware.js"
@@ -117,6 +117,9 @@ router.post("/login", handlelogin,(req,res)=>{
     res.json("recaptcha contact forme successfully submitted")
  
    });
+
+   router.patch('/block/:userID', blockUser);
+   router.patch('/unblock/:userID', unblockUser);
 
   // module.exports = router;
 export default router

@@ -40,10 +40,10 @@ warnings: {
   type: [String],
   default: []
 },
-hasSeenWarning: {
-  type: Boolean,
-  default: false
-},
+  status:{
+    type: String,
+    default: "unblock"
+  }
   },
   { timestamps: true }
 );

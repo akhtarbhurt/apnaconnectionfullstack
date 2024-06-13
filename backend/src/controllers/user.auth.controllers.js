@@ -226,4 +226,37 @@ const getHandleGenerateWarning = async (req, res)=>{
   }
 }
 
-export { handleregister, handleUpdateregister, handleGenerateWarning, getHandleGenerateWarning }
+const blockUser = async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const user = await User.findByIdAndUpdate(userID, { status: 'blocked' }, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User blocked successfully', user });
+  } catch (error) {
+    console.error('Error blocking user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Controller to unblock a user
+const unblockUser = async (req, res) => {
+  try {
+    const { userID } = req.params;
+    const user = await User.findByIdAndUpdate(userID, { status: 'unblocked' }, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User unblocked successfully', user });
+  } catch (error) {
+    console.error('Error unblocking user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export { handleregister, handleUpdateregister, handleGenerateWarning, getHandleGenerateWarning, blockUser, unblockUser }

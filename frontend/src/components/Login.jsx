@@ -94,7 +94,8 @@ const Login = () => {
       .catch((err) => {
         console.log("error", err);
         setloader(false);
-        toast.error("Incorrect email/password", { autoClose: 5000 });
+        
+        toast.error(err.response.data.message);
       });
   };
 

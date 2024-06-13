@@ -508,7 +508,7 @@ export default function Home() {
       })}
 
       <section className="relative z-10">
-        {/* <Slider /> */}
+        <Slider />
         <Testamonial />
       </section>
       <div>
