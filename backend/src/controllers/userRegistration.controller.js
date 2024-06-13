@@ -370,7 +370,16 @@ const reportReviewController = async (req, res) => {
   }
 };
 
-
+const deleteReportReviewController = async (req, res)=>{
+  try {
+    const {id} = req?.params
+    const payload = await ReportNotification.findByIdAndDelete(id)
+    if(!payload) return res.status(404).json({error: "no data found in report notification"})
+    return res.status(200).json({payload, message: "deleted successful"})
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 const getReportedReviewsController = async (req, res) => {
@@ -383,29 +392,17 @@ const getReportedReviewsController = async (req, res) => {
   }
 };
 
-const logoutUser = async (req, res) => {
-  await User.findByIdAndUpdate(
-      req.user._id,
-      {
-          $unset: {
-              refreshToken: 1 // this removes the field from the document
-          }
-      },
-      {
-          new: true
-      }
-  );
+const logoutCompany = async (req, res) => {
+  try {
+    // Clear the token from the client by setting the cookie to an empty value with an immediate expiration
+    res.clearCookie("Companytoken", { httpOnly: true, secure: false });
 
-  const options = {
-      httpOnly: true,
-      secure: true
-  };
-
-  return res
-      .status(200)
-      .clearCookie("accessToken", options)
-      .clearCookie("refreshToken", options)
-      .staus(200).json({}, 'logout successfully')
+    // Respond with a success message
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Failed to logout", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 
@@ -423,4 +420,6 @@ export {
   partialUpdateUserRegController,
   reportReviewController,
   getReportedReviewsController,
+  deleteReportReviewController,
+  logoutCompany
 };

@@ -17,6 +17,7 @@ import Section from "./pages/Section";
 import ClientFeedback from "./pages/ClientFeedback";
 import Report from "./pages/Report";
 import { CiMenuBurger } from "react-icons/ci";
+import SeeAll from "./pages/SeeAll";
 
 export default function Main() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -71,7 +72,7 @@ export default function Main() {
             <Route path="report" element={<Report />} />
             <Route path="headings" element={ <Heading/> } />
             <Route path="section" element={<Section/>} />
-            
+            <Route path="seeAll" element={ <SeeAll/> } />
           </Routes>
         </div>
       </div>

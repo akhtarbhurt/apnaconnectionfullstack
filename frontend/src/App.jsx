@@ -39,27 +39,50 @@ import MainPage from "./companyPanel/MainPage";
 import CompanyLogin from "./components/CompanyLogin";
 import CompanyRegisterr from "./components/CompanyRegister";
 import CompanyProfile from "./companyPanel/pages/CompanyProfile";
-import VerifyEmail from "../src/components/verifyEmail"
+import VerifyEmail from "../src/components/verifyEmail";
 import AddCompany from "./admin/pages/AddCompany";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const [count, setCount] = useState(0);
-  
-const [profile, setprofile] = useState(localStorage.getItem("apnaconnectionprofile")  || false);
-  const [profilesrc, setprofilesrc] = useState(localStorage.getItem("tokenapnaconnection")  || "");
+
+  const [profile, setprofile] = useState(
+    localStorage.getItem("apnaconnectionprofile") || false
+  );
+  const [profilesrc, setprofilesrc] = useState(
+    localStorage.getItem("tokenapnaconnection") || ""
+  );
   const [showLogin, setShowLogin] = useState(false);
-  const [dashboard , setDashboard] = useState(localStorage.getItem("apnaconnectionadmin")  || false)
-  const [name, setName] = useState("riyyan")
+  const [dashboard, setDashboard] = useState(
+    localStorage.getItem("apnaconnectionadmin") || false
+  );
+  const [name, setName] = useState("riyyan");
   return (
     <div>
-      <ThemeProvider value={{profile, setprofile,profilesrc,dashboard,setDashboard, setprofilesrc,showLogin, setShowLogin,name,setName}}>
+      <ThemeProvider
+        value={{
+          profile,
+          setprofile,
+          profilesrc,
+          dashboard,
+          setDashboard,
+          setprofilesrc,
+          showLogin,
+          setShowLogin,
+          name,
+          setName,
+        }}
+      >
         <BrowserRouter>
           <Routes>
             <Route path="/businesshomepage" element={<BusinessHomePAge />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Home />} />
-            <Route path="/searchresultpage/:id" element={<SearchResultPage />} />
+            <Route
+              path="/searchresultpage/:id"
+              element={<SearchResultPage />}
+            />
             <Route path="/userdashboard" element={<UserDashboard />} />
             <Route path="/about" element={<About />} />
             <Route path="/error" element={<Error />} />
@@ -69,25 +92,35 @@ const [profile, setprofile] = useState(localStorage.getItem("apnaconnectionprofi
             <Route path="/mission" element={<Mission />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/apnanews" element={<ApnaNews />} />
-            <Route path="/publicreviewpage/:id" element={<PublicReviewPage />} />
+            <Route
+              path="/publicreviewpage/:id"
+              element={<PublicReviewPage />}
+            />
             <Route path="/usersetting" element={<UserSetting />} />
             <Route path="/footer" element={<Looter />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/forgetpassword" element={<Forgetpassword />} />
             <Route path="/userRegistration" element={<UserRegistration />} />
-            <Route path="/logout"  element={ <Logout/>  } />
-            <Route path="/seeAll" element={ <SeeAll/> } />
-            <Route path="/companyPanel" element={ <MainPage/> } />
-            <Route path="/companyRegister" element={ <CompanyRegisterr/> } />
-            <Route path="/companyLogin" element={ <CompanyLogin/> } />
-            <Route path="/companyProfile" element={ <CompanyProfile /> } />
-            <Route path="/verify-email/:id" element={ <VerifyEmail/> } />
-
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/companyRegister" element={<CompanyRegisterr />} />
+            <Route path="/companyLogin" element={<CompanyLogin />} />
+            <Route path="/companyProfile" element={<CompanyProfile />} />
+            <Route path="/verify-email/:id" element={<VerifyEmail />} />
 
             {/* this is admin routes */}
             <Route path="/admin/*" element={<Main />} />
-            <Route path="/admin" element={<Navigate to="/admin/home" replace />} />
-
+            <Route
+              path="/admin"
+              element={<Navigate to="/admin/home" replace />}
+            />
+            {/* this is company panel  */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/companyPanel/*" element={<MainPage />} />
+            </Route>
+            <Route
+              path="/companyPanel"
+              element={<Navigate to={"/companyPanel/home"} />}
+            />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
