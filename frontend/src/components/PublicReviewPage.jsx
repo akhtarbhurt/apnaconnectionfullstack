@@ -8,7 +8,15 @@ import Navbar from "./Navbar";
 import Looter from "./Looter";
 import { useGlobalContext } from "../utils/useContextApi";
 import {
-  IMG36, IMG37, IMG38, IMG39, IMG41, IMG45, IMG46, IMG47, IMG48
+  IMG36,
+  IMG37,
+  IMG38,
+  IMG39,
+  IMG41,
+  IMG45,
+  IMG46,
+  IMG47,
+  IMG48,
 } from "../assets/images";
 import axios from "axios";
 
@@ -27,10 +35,19 @@ const PublicReviewPage = () => {
       try {
         const [profileResponse, likesResponse] = await Promise.all([
           axios.get("http://localhost:3000/api/v1/"),
-          axios.get("http://localhost:3000/api/v1/like")
+          axios.get("http://localhost:3000/api/v1/like"),
         ]);
         setIsProfile(profileResponse.data);
-        setLikes(likesResponse.data);
+        setLikes(
+          likesResponse.data.result.reduce((acc, like) => {
+            acc[like.postID] = acc[like.postID] || { count: 0, liked: false };
+            acc[like.postID].count += 1;
+            if (like.userID === profileResponse.data._id) {
+              acc[like.postID].liked = true;
+            }
+            return acc;
+          }, {})
+        );
       } catch (err) {
         console.log("Error", err);
       }
@@ -39,8 +56,8 @@ const PublicReviewPage = () => {
   }, [isProfile?._id]);
   console.log("profile is", isProfile);
 
-  console.log(likes)
-  const getLikes = likes?.result?.map((elem)=> elem.length  )
+  console.log(likes);
+  const getLikes = likes?.result?.map((elem) => elem.length);
   const getTimeDifference = (createdAt) => {
     const prevDate = new Date(createdAt);
     const currentDate = new Date();
@@ -59,22 +76,31 @@ const PublicReviewPage = () => {
   const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
   const renderReplies = (reviewID) => {
-    return replies?.filter(reply => reply.reviewID === reviewID)?.map(reply => (
-      <div key={reply._id} className="ml-10 mt-4 p-4 border-t border-gray-200">
-        <div className="flex items-center mb-2">
-          <img
-            src={reply.isCompanyReply ? company.logo : reply.userPhoto}
-            alt={reply.isCompanyReply ? company.companyName : reply.userName}
-            className="h-8 w-8 rounded-full"
-          />
-          <div className="ml-2">
-            <div className="text-sm font-bold">{reply.isCompanyReply ? company.companyName : reply.userName}</div>
-            <div className="text-xs text-gray-500">{getTimeDifference(reply.createdAt)}</div>
+    return replies
+      ?.filter((reply) => reply.reviewID === reviewID)
+      ?.map((reply) => (
+        <div
+          key={reply._id}
+          className="ml-10 mt-4 p-4 border-t border-gray-200"
+        >
+          <div className="flex items-center mb-2">
+            <img
+              src={reply.isCompanyReply ? company.logo : reply.userPhoto}
+              alt={reply.isCompanyReply ? company.companyName : reply.userName}
+              className="h-8 w-8 rounded-full"
+            />
+            <div className="ml-2">
+              <div className="text-sm font-bold">
+                {reply.isCompanyReply ? company.companyName : reply.userName}
+              </div>
+              <div className="text-xs text-gray-500">
+                {getTimeDifference(reply.createdAt)}
+              </div>
+            </div>
           </div>
+          <div className="text-sm">{reply.text}</div>
         </div>
-        <div className="text-sm">{reply.text}</div>
-      </div>
-    ));
+      ));
   };
 
   const handleLike = async (reviewID) => {
@@ -82,23 +108,20 @@ const PublicReviewPage = () => {
       const response = await axios.post(`http://localhost:3000/api/v1/like`, {
         likeBy: isProfile.name,
         postID: reviewID,
-        userID: isProfile._id
+        userID: isProfile._id,
       });
 
-      // Update the local likes state based on the response
-      setLikes(prevLikes => ({
+      setLikes((prevLikes) => ({
         ...prevLikes,
         [reviewID]: {
-          ...prevLikes[reviewID],
           liked: !prevLikes[reviewID]?.liked,
-          count: response.data.likeCount
-        }
+          count: response.data.likeCount,
+        },
       }));
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <>
       <Navbar />
@@ -119,7 +142,9 @@ const PublicReviewPage = () => {
                   <h2 className="text-[15px] md:text-[40px] font-bold">
                     {company?.companyName}
                   </h2>
-                  <p className="text-[13px] font-normal">Reviews 7,958 • Great</p>
+                  <p className="text-[13px] font-normal">
+                    Reviews 7,958 • Great
+                  </p>
                   <div className="flex items-center">
                     <Rate tooltips={desc} value={Math.ceil(3.7)} />
                     <div className="flex items-center ml-[4px]">
@@ -129,15 +154,29 @@ const PublicReviewPage = () => {
                   </div>
                   <div className="flex items-center bg-[#EEF9F5]">
                     <img src={IMG37} alt="Verified Company" />
-                    <p className="ml-[1px] text-[7px] font-normal">VERIFIED COMPANY</p>
+                    <p className="ml-[1px] text-[7px] font-normal">
+                      VERIFIED COMPANY
+                    </p>
                   </div>
                 </div>
               </div>
               <div className="w-full flex justify-center md:w-6/12">
-                <a href={company?.siteLink} target="_blank" rel="noopener noreferrer" className="w-11/12 border-3 border-[#DCDCE6] flex justify-around items-center md:w-7/12 md:h-[104px]">
+                <a
+                  href={company?.siteLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-11/12 border-3 border-[#DCDCE6] flex justify-around items-center md:w-7/12 md:h-[104px]"
+                >
                   <div className="flex items-center">
-                    <img loading="lazy" src={company?.logo} alt={company?.companyName} className="h-[50px]" />
-                    <p className="ml-[12px] text-[22px] font-normal">{company?.companyName}</p>
+                    <img
+                      loading="lazy"
+                      src={company?.logo}
+                      alt={company?.companyName}
+                      className="h-[50px]"
+                    />
+                    <p className="ml-[12px] text-[22px] font-normal">
+                      {company?.companyName}
+                    </p>
                   </div>
                   <MdOutlineKeyboardArrowRight />
                 </a>
@@ -151,7 +190,10 @@ const PublicReviewPage = () => {
               <div className="bg-white h-[88px] flex justify-between items-center px-[12px] mb-5">
                 <div className="flex items-center">
                   <img loading="lazy" src={IMG38} alt="Write Review" />
-                  <Link to={`/review/${id}`} className="text-[#1A66FF] text-[14px] font-normal ml-[13px]">
+                  <Link
+                    to={`/review/${id}`}
+                    className="text-[#1A66FF] text-[14px] font-normal ml-[13px]"
+                  >
                     Write a review
                   </Link>
                 </div>
@@ -161,40 +203,78 @@ const PublicReviewPage = () => {
                 <div className="w-full flex justify-center md:justify-end">
                   <div className="w-11/12 flex justify-between items-center md:w-6/12">
                     <div className="text-[12px]">Sort by:</div>
-                    <div className="bg-[#454554] p-[4px] text-[12px] text-white mr-[8px]">Most relevant</div>
-                    <div className="bg-[#fbfbfb] p-[4px] border-[1px] text-[12px] border-[#9A9AAD]">Most recent</div>
-                    <img loading="lazy" src={IMG36} alt="Sort Icon" className="ml-[7px]" />
+                    <div className="bg-[#454554] p-[4px] text-[12px] text-white mr-[8px]">
+                      Most relevant
+                    </div>
+                    <div className="bg-[#fbfbfb] p-[4px] border-[1px] text-[12px] border-[#9A9AAD]">
+                      Most recent
+                    </div>
+                    <img
+                      loading="lazy"
+                      src={IMG36}
+                      alt="Sort Icon"
+                      className="ml-[7px]"
+                    />
                   </div>
                 </div>
               </div>
               {reviews?.map((review) => (
-                <div key={review._id} className="w-full bg-white flex flex-col mb-5">
+                <div
+                  key={review._id}
+                  className="w-full bg-white flex flex-col mb-5"
+                >
                   <div className="w-11/12 mx-auto">
                     <div className="flex items-center pt-[5px]">
-                      <div> <img src={isProfile.profileImageURL} alt="" /> </div>
+                      <div>
+                        {" "}
+                        <img src={isProfile.profileImageURL} alt="" />{" "}
+                      </div>
                       <div className="ml-[12px]">
                         <div>{review.name}</div>
                       </div>
                     </div>
                     <hr className="my-[16px]" />
                     <div className="flex justify-between">
-                      <Rate className="mt-5 text-2xl" tooltips={desc} value={review.rating} disabled />
-                      <div className="w-4/12 text-right text-[#6C6C85] md:w-3/12">{getTimeDifference(review.createdAt)}</div>
+                      <Rate
+                        className="mt-5 text-2xl"
+                        tooltips={desc}
+                        value={review.rating}
+                        disabled
+                      />
+                      <div className="w-4/12 text-right text-[#6C6C85] md:w-3/12">
+                        {getTimeDifference(review.createdAt)}
+                      </div>
                     </div>
-                    <p className="my-[12px] text-[18px]">The response was very good.</p>
+                    <p className="my-[12px] text-[18px]">
+                      {(() => {
+                        switch (review.rating) {
+                          case 1:
+                            return " Response was terrible";
+                          case 2:
+                            return " Response was bad";
+                          case 3:
+                            return " Response was normal";
+                          case 4:
+                            return "Response was good";
+                          case 5:
+                            return "Response was wonderful";
+                          default:
+                            return "You have not rated ";
+                        }
+                      })()}
+                    </p>
                     <p className="text-[14px] my-[6px]">{review?.review}</p>
                     <hr className="my-[6px]" />
                     <div className="flex justify-between my-[12px]">
                       <div className="w-5/12 flex items-center md:w-4/12">
                         <AiOutlineLike
                           onClick={() => handleLike(review._id)}
-                          className={`mr-2 cursor-pointer `}
+                          className={`mr-2 cursor-pointer ${
+                            likes[review._id]?.liked ? "text-blue-500" : ""
+                          }`}
                         />
-                        <div> Likes</div>
-                        <div className="flex items-center ml-4">
-                          <IoShareSocialOutline className="mr-[3px]" />
-                          <div className="text-[#6C6C85]">Share</div>
-                        </div>
+                        <div>{likes[review._id]?.count || 0} Likes</div>{" "}
+                        {/* Display like count */}
                       </div>
                       <div className="w-3/12 text-right flex items-center justify-end">
                         <IoFlagOutline />
@@ -207,14 +287,19 @@ const PublicReviewPage = () => {
             </div>
             <div className="mt-[15px] w-full md:w-6/12 lg:w-4/12 lg:mt-[0px]">
               <div className="bg-white rounded-md py-[12px] px-[5px] mb-[20px] companyactivity">
-                <div className="text-[16px] font-normal ml-[10px]">Company activity See all</div>
+                <div className="text-[16px] font-normal ml-[10px]">
+                  Company activity See all
+                </div>
                 <hr className="my-[8px]" />
                 <div className="flex items-center ml-[10px]">
                   <div>
                     <img loading="lazy" src={IMG36} alt="Company Activity" />
                   </div>
                   <div className="ml-[6px]">
-                    <p className="text-[13px] font-normal">Ashe S.  <span className="text-[#6C6C85]">left a review</span></p>
+                    <p className="text-[13px] font-normal">
+                      Ashe S.{" "}
+                      <span className="text-[#6C6C85]">left a review</span>
+                    </p>
                     <p className="text-[#6C6C85] text-[13px]">30 minutes ago</p>
                   </div>
                 </div>
@@ -224,7 +309,10 @@ const PublicReviewPage = () => {
                     <img loading="lazy" src={IMG36} alt="Company Activity" />
                   </div>
                   <div className="ml-[6px]">
-                    <p className="text-[13px] font-normal">Janko W.  <span className="text-[#6C6C85]">left a review</span></p>
+                    <p className="text-[13px] font-normal">
+                      Janko W.{" "}
+                      <span className="text-[#6C6C85]">left a review</span>
+                    </p>
                     <p className="text-[#6C6C85] text-[13px]">1 hour ago</p>
                   </div>
                 </div>
@@ -234,16 +322,34 @@ const PublicReviewPage = () => {
                     <img loading="lazy" src={IMG36} alt="Company Activity" />
                   </div>
                   <div className="ml-[6px]">
-                    <p className="text-[13px] font-normal">Oscar J.  <span className="text-[#6C6C85]">left a review</span></p>
+                    <p className="text-[13px] font-normal">
+                      Oscar J.{" "}
+                      <span className="text-[#6C6C85]">left a review</span>
+                    </p>
                     <p className="text-[#6C6C85] text-[13px]">2 hours ago</p>
                   </div>
                 </div>
               </div>
               <div className="flex flex-col items-center bg-white">
                 <img loading="lazy" src={IMG45} alt="Promo" />
-                <img loading="lazy" src={IMG46} alt="Promo" className="mt-[15px]" />
-                <img loading="lazy" src={IMG47} alt="Promo" className="mt-[15px]" />
-                <img loading="lazy" src={IMG48} alt="Promo" className="mt-[15px]" />
+                <img
+                  loading="lazy"
+                  src={IMG46}
+                  alt="Promo"
+                  className="mt-[15px]"
+                />
+                <img
+                  loading="lazy"
+                  src={IMG47}
+                  alt="Promo"
+                  className="mt-[15px]"
+                />
+                <img
+                  loading="lazy"
+                  src={IMG48}
+                  alt="Promo"
+                  className="mt-[15px]"
+                />
               </div>
             </div>
           </div>

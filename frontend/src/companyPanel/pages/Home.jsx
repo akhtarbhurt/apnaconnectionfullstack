@@ -22,21 +22,18 @@ const Dashboard = () => {
         const reviews = response?.data?.payload;
 
         // Process data for the charts
-        const monthlyReviews = processMonthlyReviews(reviews  );
-        const ratingsDistribution = processRatingsDistribution(reviews  );
-        const sentimentAnalysis = processSentimentAnalysis(reviews  );
+        const monthlyReviews = processMonthlyReviews(reviews);
+        const ratingsDistribution = processRatingsDistribution(reviews);
+        const sentimentAnalysis = processSentimentAnalysis(reviews);
 
-        
-          setReviewsData({
-            monthlyReviews  ,
-            ratingsDistribution,
-            sentimentAnalysis,
-          });
-        
-
+        setReviewsData({
+          monthlyReviews,
+          ratingsDistribution,
+          sentimentAnalysis,
+        });
       } catch (error) {
         console.error('Failed to fetch reviews', error);
-        
+
         setReviewsData({
           monthlyReviews: processMonthlyReviews([]),
           ratingsDistribution: processRatingsDistribution([]),
@@ -55,7 +52,7 @@ const Dashboard = () => {
     const data = Array(12).fill(0);
 
     reviews?.forEach((review) => {
-      const month = new Date(review.date).getMonth();
+      const month = new Date(review.createdAt).getMonth();
       data[month]++;
     });
 
@@ -141,17 +138,13 @@ const Dashboard = () => {
     <div className="min-h-screen p-8 bg-gray-100">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow w-full">
-          <h2 className="text-xl font-bold mb-2">Overview</h2>
-          <p>Summary of recent activities</p>
-        </div>
         <div className="bg-white p-6 rounded-lg shadow col-span-2 w-full">
           <h2 className="text-xl font-bold mb-2">Monthly Reviews</h2>
           <Line data={reviewsData.monthlyReviews} />
         </div>
-        <div className="bg-white p-6 rounded-lg shadow col-span-1 w-full">
+        <div className="bg-white p-6  rounded-lg shadow col-span-1 w-full">
           <h2 className="text-xl font-bold mb-2">Ratings Distribution</h2>
-          <Bar data={reviewsData.ratingsDistribution} />
+          <Bar data={reviewsData.ratingsDistribution} className='w-full  ' />
         </div>
         <div className="bg-white p-6 rounded-lg shadow col-span-1 w-full">
           <h2 className="text-xl font-bold mb-2">Sentiment Analysis</h2>

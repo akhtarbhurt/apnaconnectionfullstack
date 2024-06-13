@@ -3,6 +3,7 @@ import { IoIosHome } from "react-icons/io";
 import { MdFactory } from "react-icons/md";
 import { Tooltip, Button } from "antd";
 import { FaAnglesRight, FaAnglesLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function CompanySidebar({
   isSidebarOpen,
@@ -34,22 +35,26 @@ export default function CompanySidebar({
       <nav className="flex justify-center flex-grow">
         <ul className="text-white flex flex-col mt-10 gap-10 text-[15px]">
           <Tooltip placement="right" title={isSidebarOpen ? "" : "Dashboard"}>
-            <li
-              className={`cursor-pointer rounded-md p-1 px-5 flex gap-3 items-center ${
-                activeTab === "home" ? "bg-white text-black" : "text-white"
-              }`}
-              onClick={() => handleTabs("home")}
-            >
-              <IoIosHome />
-              <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
-                Dashboard
-              </p>
-            </li>
+            <Link to={"/companyPanel/home"}>
+              <li
+                className={`cursor-pointer rounded-md p-1 px-5 flex gap-3 items-center ${
+                  activeTab === "home" ? "bg-white text-black" : "text-white"
+                }`}
+                onClick={() => handleTabs("home")}
+              >
+                <IoIosHome />
+                <p className={`${isSidebarOpen ? "block" : "hidden"}`}>
+                  Dashboard
+                </p>
+              </li>
+            </Link>
           </Tooltip>
-
+          <Link to={'/companyPanel/reviewManagement'} >
           <li
             className={`cursor-pointer rounded-md p-1 px-5 flex flex-col gap-3 items-start ${
-              activeTab === "reviewManagement" ? "bg-white text-black" : "text-white"
+              activeTab === "reviewManagement"
+                ? "bg-white text-black"
+                : "text-white"
             }`}
             onClick={() => handleTabs("reviewManagement")}
           >
@@ -60,6 +65,7 @@ export default function CompanySidebar({
               </p>
             </div>
           </li>
+          </Link>
         </ul>
       </nav>
       {/* Fixed and centered toggle button */}
