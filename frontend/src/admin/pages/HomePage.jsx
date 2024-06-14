@@ -107,7 +107,7 @@ export default function HomePage() {
   }, []);
 
   if (loading) {
-    return <Spin size="large" className="w-full h-full flex justify-center items-center" />;
+    return <div className="min-h-screen flex justify-center items-center w-full " ><Spin size="large" className="w-full h-full flex justify-center items-center" /></div>;
   }
 
   return (

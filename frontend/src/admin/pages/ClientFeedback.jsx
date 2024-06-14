@@ -196,7 +196,7 @@ const ClientFeedback = () => {
             </Upload>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">Submit</Button>
+            <Button type="primary" className='bg-blue-500 text-white' htmlType="submit">Submit</Button>
           </Form.Item>
         </Form>
       </Modal>

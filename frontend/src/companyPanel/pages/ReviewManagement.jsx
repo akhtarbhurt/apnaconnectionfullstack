@@ -37,7 +37,7 @@ const ReviewManagement = () => {
 
     fetchReviews();
 
-    ws.current = new WebSocket('ws://localhost:3000');
+    ws.current = new WebSocket('ws://localhost:8080');
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);

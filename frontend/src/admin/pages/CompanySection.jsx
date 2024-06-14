@@ -204,6 +204,7 @@ export default function CompanySection() {
         <div className="flex flex-col items-center justify-center gap-2">
           <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
           <Button
+            
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record._id)}
           />
@@ -274,7 +275,7 @@ export default function CompanySection() {
               </Upload>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" className="bg-blue-500 text-white" htmlType="submit">
                 Save
               </Button>
             </Form.Item>

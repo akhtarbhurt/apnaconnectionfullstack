@@ -5,97 +5,99 @@ const userRegSchema = new Schema({
         type: String,
         trim: true
     },
-    companyName:{
+    companyName: {
         type: String,
         trim: true
     },
-    personName:{
+    personName: {
         type: String,
         trim: true
     },
-    email:{
+    email: {
         type: String,
         trim: true,
         required: true
     },
-    phone:{
+    phone: {
         type: String,
         trim: true
     },
-    description:{
+    description: {
         type: String,
         trim: true
     },
-    address:{
+    address: {
         type: String,
         trim: true
     },
-    industry:{
+    industry: {
         type: String,
         trim: true
     },
-    location:{
+    location: {
         type: String,
         trim: true
     },
-    founded:{
+    founded: {
         type: String,
         trim: true
     },
-    startTime:{
+    startTime: {
         type: String,
         trim: true
     },
-    endTime:{
+    endTime: {
         type: String,
         trim: true
     },
-    instagram:{
+    instagram: {
         type: String,
         trim: true
     },
-    facebook:{
+    facebook: {
         type: String,
         trim: true
     },
-    instagram:{
+    linkedin: {
         type: String,
         trim: true
     },
-    linkedin:{
+    siteLink: {
         type: String,
         trim: true
     },
-    siteLink:{
+    category: {
         type: String,
         trim: true
     },
-    category:{
-        type: String,
-        trim: true
-    },
-    status:{
+    status: {
         type: String,
         default: 'Pending'
     },
-    verificationToken:{
+    verificationToken: {
         type: String
     },
-    tokenExpiration:{
+    tokenExpiration: {
         type: String
     },
-    progressbar:{
+    progressbar: {
         type: Number,
         default: 0
     },
-    password:{
+    password: {
         type: String,
         required: true
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
     }
-},{
+}, {
     timestamps: true
-})
+});
 
-const UserRegistration = mongoose.model("userRegistered", userRegSchema)
+const UserRegistration = mongoose.model("userRegistered", userRegSchema);
 
-export {UserRegistration}
+export { UserRegistration };

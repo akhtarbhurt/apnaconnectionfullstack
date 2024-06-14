@@ -405,6 +405,108 @@ const logoutCompany = async (req, res) => {
   }
 };
 
+const changePasswordController = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: "New passwords do not match" });
+    }
+
+    const userId = req.user.userId; 
+    const user = await UserRegistration.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Current password is incorrect" });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    return res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Failed to change password", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+const sendPasswordResetEmail = (email, token) => {
+  const resetLink = `http://localhost:5173/reset-password/${token}`;
+  const mailOptions = {
+    from: EMAIL_FROM,
+    to: email,
+    subject: 'Password Reset Request',
+    text: `Please reset your password by clicking the following link: ${resetLink}`,
+    html: `<p>Please reset your password by clicking the following link:</p><a href="${resetLink}">${resetLink}</a>`
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
+const requestPasswordResetController = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await UserRegistration.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+
+    const resetToken = crypto.randomBytes(20).toString('hex');
+    const tokenExpiration = Date.now() + 3600000; // 1 hour
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = tokenExpiration;
+    await user.save();
+
+    await sendPasswordResetEmail(user.email, resetToken);
+
+    return res.status(200).json({ message: 'Password reset email sent' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+const resetPasswordController = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+
+    const user = await UserRegistration.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Token is invalid or has expired' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password reset successful' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 export { 
   userRegistrationController, 
@@ -421,5 +523,8 @@ export {
   reportReviewController,
   getReportedReviewsController,
   deleteReportReviewController,
-  logoutCompany
+  logoutCompany,
+  changePasswordController,
+  requestPasswordResetController,
+  resetPasswordController
 };
