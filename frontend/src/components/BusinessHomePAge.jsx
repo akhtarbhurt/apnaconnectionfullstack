@@ -39,20 +39,20 @@ const BusinessHomePAge = () => {
     usecotextFunction();
 
   // for navbar login signup and role
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/")
-      .then((res) => {
-        console.log("token matched", res.data, "statevalue", profile);
-        setprofilesrc(res.data.profileImageURL);
-        console.log("setprofilesrc", profilesrc);
-        setprofile(true);
-      })
-      .catch((err) => {
-        console.log("token not matched", err);
-        setprofile(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3001/")
+  //     .then((res) => {
+  //       console.log("token matched", res.data, "statevalue", profile);
+  //       setprofilesrc(res.data.profileImageURL);
+  //       console.log("setprofilesrc", profilesrc);
+  //       setprofile(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log("token not matched", err);
+  //       setprofile(false);
+  //     });
+  // }, []);
 
   function SampleNextArrow(props) {
     const { className, style, onClick } = props;
@@ -143,68 +143,67 @@ const BusinessHomePAge = () => {
                 Apna Connection helps grow your business using customer reviews
               </p>
 
-              <button className=" bg-[#3578FA] text-[0.875rem] text-white px-[1.063rem] py-[0.563rem] mt-[1.063rem]">
-                Request Demo
-              </button>
             </div>
           </div>
         </div>
 
         {/* ======================3 icons and text============== */}
-        <div className="w-full flex justify-center items-center mt-[1.438rem] mb-[2.688rem]">
-          <div className=" min-[320px]:w-full md:w-full md:flex md:justify-center md:items-center lg:w-9/12">
-            <div className="w-full flex items-center justify-between mt-[0.5rem] mr-[0.5rem]">
-              <div className=" ml-[0.563rem]">
-                <img src={img25} alt="" />
-              </div>
+        <div className='w-full flex justify-center items-center mt-[1.438rem] mb-[2.688rem]'>
 
-              <div className=" ml-[1.125rem]">
-                <p>
-                  <span className=" text-[1.938rem] font-semibold">30</span>{" "}
-                  thousand
-                </p>
-                <p className=" leading-[0px] text-[1rem] font-normal">
-                  reviews seen every month
-                </p>
-                <p className=" mt-[0.75rem] text-[#555555] text-[1rem] font-normal">
-                  Over 30 thousand review impressions every month
-                </p>
-              </div>
-            </div>
+    <div className=' min-[320px]:w-full md:w-full md:flex md:justify-center md:items-center lg:w-9/12'>
 
-            <div className="w-full flex items-center justify-between mt-[0.5rem] mr-[0.5rem]">
-              <div className=" ml-[0.563rem]">
-                <img src={img26} alt="" />
-              </div>
+    <div className='w-full flex items-center justify-around mt-[0.5rem] mr-[0.5rem]'>
 
-              <div className=" ml-[1.125rem]">
-                <p>
-                  <span className=" text-[1.688rem]">5</span> thousand
-                </p>
-                <p className=" leading-[0px]">real reviews per month</p>
-                <p className=" mt-[0.75rem] text-[#555555]">
-                  Over 5 thousand reviews posted every month
-                </p>
-              </div>
-            </div>
+<div className=' ml-[0.563rem]'>
+    <img  src={img25} alt="" />
+</div>
 
-            <div className="w-full flex items-center justify-between mt-[0.5rem]">
-              <div className=" ml-[0.563rem]">
-                <img src={img27} alt="" />
-              </div>
+<div className='w-7/12 md:ml-[1.125rem] md:w-full'>
+    <p><span className=' text-[1.938rem] font-semibold'>30</span> thousand</p>
+    <p className=' leading-[0px] text-[1rem] font-normal'>
+    reviews seen every month
+        </p>
+    <p className=' mt-[0.75rem] text-[#555555] text-[1rem] font-normal'>Over 30 thousand review impressions every month</p>
+</div>
 
-              <div className=" ml-[1.125rem]">
-                <p>
-                  <span className=" text-[1.688rem]">1</span> thousand
-                </p>
-                <p className=" leading-[0px]">have a great return</p>
-                <p className=" mt-[0.75rem] text-[#555555] leading-[1.188rem]">
-                  Over 1 thousand companies increase their business
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+    </div>
+
+
+    <div className='w-full flex items-center justify-around xs:mt-[1rem] md:mt-[0.5rem] md:justify-between mr-[0.5rem]'>
+
+<div className=' md:ml-[0.563rem]'>
+    <img src={img26} alt="" />
+</div>
+
+<div className='w-7/12 md:w-full md:ml-[1.125rem]'>
+    <p><span className=' text-[1.688rem]'>5</span> thousand</p>
+    <p className=' leading-[0px]'>
+    real reviews per month
+        </p>
+    <p className=' mt-[0.75rem] text-[#555555]'>Over 5 thousand reviews posted every month</p>
+</div>
+
+    </div>
+
+    <div className='w-full flex items-center justify-around mt-[0.5rem]'>
+
+<div className=' ml-[0.563rem]'>
+    <img src={img27} alt="" />
+</div>
+
+<div className=' w-7/12 md:w-full md:ml-[1.125rem]'>
+    <p><span className=' text-[1.688rem]'>1</span> thousand</p>
+    <p className=' leading-[0px]'>
+    have a great return
+        </p>
+    <p className=' mt-[0.75rem] text-[#555555] leading-[1.188rem]'>Over 1 thousand companies increase their business</p>
+</div>
+
+    </div>
+
+    </div>
+</div>
+
 
         {/* ==============marquee========== */}
 
@@ -362,11 +361,7 @@ const BusinessHomePAge = () => {
                   pro.
                 </p>
               </div>
-              <div className=" w-7/12">
-                <button className=" bg-[#3578FA] px-[22px] py-[0.563rem] text-[0.875rem]">
-                  Request Demo
-                </button>
-              </div>
+              
             </div>
           </div>
         </div>
@@ -393,15 +388,12 @@ const BusinessHomePAge = () => {
                   </div>
                 </div>
                 <div className=" px-[0.875rem] py-[0.625rem] font-normal text-[0.875rem]">
-                  Mucius doctus constituto pri at. At vix utinam corpora, ea
-                  oblique moderatius usu. Vix id viris consul honestatis, an
-                  constituto deterruisset consectetuer pro quo corrumpit
-                  euripidis.
+                Analytics tools help businesses collect, process, and analyze data to inform decision-making and optimize operations. Examples include Google Analytics, Tableau, and IBM SPSS.
                 </div>
               </div>
 
               <div className=" border mt-[0.625rem] w-full ml-[0px] md:ml-[1.188rem] md:w-7/12 md:mt-[0px]">
-                <div className=" px-[0.875rem] pb-[0.625rem]">
+                <div className=" px-[0.875rem]">
                   <div className="flex items-center">
                     <img
                       loading="lazy"
@@ -415,10 +407,7 @@ const BusinessHomePAge = () => {
                   </div>
                 </div>
                 <div className=" px-[0.875rem] py-[0.625rem] text-[0.875rem]">
-                  Mucius doctus constituto pri at. At vix utinam corpora, ea
-                  oblique moderatius usu. Vix id viris consul honestatis, an
-                  constituto deterruisset consectetuer pro quo corrumpit
-                  euripidis.
+                Mucius Doctus focuses on the establishment of learned principles, emphasizing the balance of moderation and wisdom. It tackles the issues of honest counsel and the deterrence of corrupt influences.
                 </div>
               </div>
             </div>
@@ -436,10 +425,7 @@ const BusinessHomePAge = () => {
                   </div>
                 </div>
                 <div className=" px-[0.875rem] py-[0.625rem] text-[0.875rem]">
-                  Mucius doctus constituto pri at. At vix utinam corpora, ea
-                  oblique moderatius usu. Vix id viris consul honestatis, an
-                  constituto deterruisset consectetuer pro quo corrumpit
-                  euripidis.
+                Targeted consumers are the specific group of people a product or service is designed and marketed for. Identifying this group helps businesses tailor their marketing strategies to meet the needs and preferences of their ideal customers.
                 </div>
               </div>
 
@@ -453,10 +439,7 @@ const BusinessHomePAge = () => {
                   </div>
                 </div>
                 <div className=" p-[0.625rem] text-[0.875rem]">
-                  Mucius doctus constituto pri at. At vix utinam corpora, ea
-                  oblique moderatius usu. Vix id viris consul honestatis, an
-                  constituto deterruisset consectetuer pro quo corrumpit
-                  euripidis.
+                Awesome Support is a comprehensive WordPress plugin designed to provide robust customer support capabilities. It offers features such as ticket management, customizable fields, and automated responses to enhance the support experience for users.
                 </div>
               </div>
             </div>

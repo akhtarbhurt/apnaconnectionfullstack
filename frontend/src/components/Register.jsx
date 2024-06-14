@@ -82,12 +82,13 @@ const Register = () => {
       <Popup />
       <div className="">
         <div className=" h-full w-full overflow-hidden">
-          <div className=" h-full w-full flex justify-between overflow-hidden max-[768px]:flex-col">
-            <div className=" min-[320px]:h-[620px] min-[1024px]:h-[634px] w-4/12  left flex flex-col justify-around max-[768px]:w-full">
+          <div className=" h-screen w-full flex justify-between overflow-hidden max-[768px]:flex-col">
+            <div className=" min-[320px]:h-screen min-[1024px]:h-screen w-full  left flex flex-col justify-around max-[768px]:w-full">
               <div className="flex w-full justify-center items-center max-[768px]:flex-col">
                 <div className=" w-9/12 flex justify-center ml-[27px] items-center max-[768px]:ml-[1px]">
                   <Link to={"/"}>
                     <img
+                    className=" h-32"
                       src="https://www.apnaconnection.com/public/admin-panel/img/logo.png"
                       alt=""
                     />
@@ -98,30 +99,6 @@ const Register = () => {
                     X
                   </Link>
                 </div>
-              </div>
-              <div className=" min-[320px]:mt-[10px] min-[1024px]:translate-y-[10px] flex justify-center w-full">
-                <p className=" w-9/12 flex cursor-pointer items-center bg-[#3c5a9a] text-white p-[7px] rounded-lg max-[320px]:p-[6px] max-[320px]:w-10/12">
-                  <span>
-                    <FaFacebookF />
-                  </span>
-                  <span className=" ml-[29px]">Register With Facebook</span>
-                </p>
-              </div>
-              <div className="min-[320px]:mt-[10px] min-[1024px]:translate-y-[0px] flex justify-center w-full ">
-                <p className=" w-9/12 flex cursor-pointer items-center bg-[#dd4b39] text-white p-[7px] rounded-lg max-[320px]:p-[6px] max-[320px]:w-10/12">
-                  <span>
-                    <TiSocialGooglePlus className=" text-[25px]" />
-                  </span>
-                  <span className=" ml-[29px]">Register With Google</span>
-                </p>
-              </div>
-
-              <div className=" w-full flex justify-center items-center  mt-[10px]">
-                <p className=" w-4/12 bg-[#C1C1C1] h-[1px] flex justify-center items-center max-[320px]:w-5/12"></p>
-                <p className=" flex justify-center items-center h-[1px] w-1/12">
-                  Or
-                </p>
-                <p className="bg-[#C1C1C1] w-4/12 flex justify-center items-center h-[1px] max-[320px]:w-4/12"></p>
               </div>
 
               <form onSubmit={handlesignupsubmit} encType="multipart/form-data">

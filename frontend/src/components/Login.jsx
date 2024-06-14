@@ -108,9 +108,9 @@ const Login = () => {
     <>
       <Popup />
      
-      <div className=" h-full w-full">
-        <div className=" h-full w-full flex justify-between overflow-hidden max-[768px]:flex-col">
-          <div className=" xs:h-[38.75rem] lg:h-[39.635rem] w-4/12  left flex flex-col justify-around max-[768px]:w-full">
+      <div className=" h-screen w-full">
+        <div className=" h-screen w-full flex justify-between overflow-hidden max-[768px]:flex-col">
+          <div className=" xs:h-screen lg:h-screen w-4/12  left flex flex-col justify-around max-[768px]:w-full">
             <div className="flex w-full justify-center items-center max-[768px]:flex-col">
               <div className=" w-9/12 flex justify-center ml-[1.688rem] items-center max-[768px]:ml-[1px]">
                 <Link to={"/"}>
@@ -127,30 +127,9 @@ const Login = () => {
                 </Link>
               </div>
             </div>
-            <div className=" flex justify-center w-full lg:translate-y-[2.25rem]">
-              <p className=" w-9/12 flex cursor-pointer items-center bg-[#3c5a9a] text-white p-[0.625rem] rounded-lg max-[320px]:p-[0.375rem] max-[320px]:w-10/12">
-                <span>
-                  <FaFacebookF />
-                </span>
-                <span className=" ml-[29px]">Register With Facebook</span>
-              </p>
-            </div>
-            <div className=" flex justify-center w-full lg:translate-y-[1.875rem]">
-              <p className=" w-9/12 flex cursor-pointer items-center bg-[#dd4b39] text-white p-[0.625rem] rounded-lg max-[320px]:p-[0.375rem] max-[320px]:w-10/12">
-                <span>
-                  <GrGooglePlus className=" text-[1.563rem]" />
-                </span>
-                <span className=" ml-[29px]">Register With Google</span>
-              </p>
-            </div>
+           
 
-            <div className=" w-full flex justify-center items-center mt-[2.5rem]">
-              <p className=" w-4/12 bg-slate-300 h-[1px] flex justify-center items-center max-[320px]:w-5/12"></p>
-              <p className=" text-[#767575] flex justify-center items-center h-[1px] w-1/12">
-                Or
-              </p>
-              <p className="bg-slate-300 w-4/12 flex justify-center items-center h-[1px] max-[320px]:w-5/12"></p>
-            </div>
+          
 
             <form onSubmit={hadlesignin}>
               <div className="  flex justify-center w-full  ">
@@ -196,12 +175,12 @@ const Login = () => {
                 </div>
               </div>
             </form>
-            <div className=" flex justify-center mt-[1.875rem]">
+            <div className=" flex justify-center mt-[1.275rem]">
               <p className=" text-[#2363ab] text-[0.813rem] font-bold cursor-pointer">
                 Forgot Your Password?
               </p>
             </div>
-            <div className=" flex justify-center mt-[2.25rem]">
+            <div className=" flex justify-center mt-[1.25rem]">
               <p className=" text-[0.813rem] text-[#818181]">
                 Not a member yet?
                 <Link to="/register">
@@ -213,7 +192,7 @@ const Login = () => {
               </p>
             </div>
           </div>
-          <div className="w-8/12 right max-[768px]:w-full">
+          <div className=" xs:hidden w-8/12 right max-[768px]:w-full md:block">
             <img src={regImage} className=" w-full h-full" alt="pic" />
           </div>
         </div>

@@ -91,8 +91,8 @@ export default function Looter() {
           <p className="text-[0.813rem]">Terms of Use</p>
         </div>
         <div className="flex justify-center ml-auto mr-auto    md:hidden">
-          <p className=" text-[0.813rem]">© 2022 Apna Connection, Made with ❤ by</p>
-          <span className="text-[0.813rem] text-red-600">Digitech infra</span>
+          <p className=" text-[0.813rem] xs:mt-2 md:mt-0">© 2022 Apna Connection, Made with ❤ by</p>
+          <span className="text-[0.813rem] text-red-600 xs:mt-2 md:mt-0">Digitech infra</span>
         </div>
         
       </div>

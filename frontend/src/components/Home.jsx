@@ -20,6 +20,7 @@ import usecotextFunction from "../utils/useContext";
 import { useGlobalContext } from "../utils/useContextApi";
 import { useNavigate } from "react-router-dom";
 axios.defaults.withCredentials = true;
+import { RxHamburgerMenu } from "react-icons/rx";
 
 export default function Home() {
   const [hamberg, setHamberg] = useState(true);
@@ -220,7 +221,7 @@ export default function Home() {
 
           {/* <nav className={`xs:hidden md:flex w-full justify-evenly items-center  bg-navRgba ${isSticky ? 'fixed top-0 z-50 bg-white bg-opacity-100 shadow-md p-2' : 'xs:hidden md:flex w-full justify-between items-center absolute top 0 py-2  '}`}> */}
           <nav
-            className={`xs:hidden md:flex w-full justify-around items-center transition duration-500 ease-in-out ${
+            className={`xs:hidden lg:flex w-full justify-around items-center transition duration-500 ease-in-out ${
               isSticky
                 ? "fixed top-0 z-50 bg-white bg-opacity-100 shadow-md p-2"
                 : "absolute top-0 py-2 bg-navRgba"
@@ -231,7 +232,7 @@ export default function Home() {
                 <img src={logo} alt="logo" className=" h-14 pt-1" />
               </Link>
             </div>
-            <div className="flex md:w-5/12 gap-6  justify-end    items-center text-lg font-semibold capitalize  lg:w-4/12">
+            <div className="flex md:w-5/12 gap-6  justify-end    items-center text-lg font-semibold capitalize  lg:w-5/12">
               <Link to={"/apnanews"} className="hover:text-orange-500 ">
                 news
               </Link>
@@ -246,7 +247,7 @@ export default function Home() {
               </Link>
 
               {dashboard !== "false" && profile !== "false" ? (
-                <Link to={"/dashboard"} className=" hover:text-orange-500">
+                <Link to={"/admin"} className=" hover:text-orange-500">
                   {" "}
                   Dashboard
                 </Link>
@@ -287,22 +288,23 @@ export default function Home() {
 
           {/* ========hamberg============= */}
 
-          <nav className=" absolute z-50 block sm:block md:hidden lg:hidden right-0 ">
+          <nav className=" absolute z-50 block sm:block lg:hidden  right-0 ">
             {hamberg ? (
               <nav
                 onClick={() => hambergfunc()}
-                className="navhamberg cursor-pointer flex justify-end mr-[4px] mt-[5px] md:hidden bg-[#6b6a6a] rounded-lg"
+                className=" bg-blue-500 text-white navhamberg cursor-pointer flex justify-end mr-5 mt-4 lg:hidden p-2  rounded-lg text-[32px]"
               >
-                <div className=" h-[2.188rem] w-[2.188rem] border-2 border-black flex flex-col justify-around rounded-lg">
+                <RxHamburgerMenu className=" text-white" />
+                {/* <div className=" h-[2.188rem] w-[2.188rem] border-2 border-black flex flex-col justify-around rounded-lg">
                   <p className=" w-full h-[0.063rem] border-[0.063rem] border-black"></p>
                   <p className=" w-full h-[0.063rem] border-[0.063rem] border-black"></p>
                   <p className=" w-full h-[0.063rem] border-[0.063rem] border-black"></p>
-                </div>
+                </div> */}
               </nav>
             ) : (
               ""
             )}
-            {hambergexp ? (
+            {/* {hambergexp ? (
               <div className="border-2 border-black bg-white w-screen h-[18.75rem] flex flex-col justify-around   pl-[0.125rem] md:hidden">
                 <p className="">
                   <Link to={"/login"}>Login</Link>{" "}
@@ -325,7 +327,41 @@ export default function Home() {
               </div>
             ) : (
               ""
-            )}
+            )} */}
+              {hambergexp && (
+        <div className="border-2 border-black bg-blue-600 relative w-screen h-[12.75rem] flex flex-col justify-around px-[2.425rem] lg:hidden">
+                    <p className="text-white"><Link className="cursor-pointer" to={"/"}>Home</Link></p>
+
+          <p className="text-white"><Link className="cursor-pointer" to={"/apnanews"}>News</Link></p>
+
+          <p><Link to={"/businesshomepage"} className="text-white cursor-pointer">For Business</Link></p>
+          <p onClick={hambergfuncclose} className="text-[1.85rem] cursor-pointer mr-3 absolute right-1 top-2 text-white">x</p>
+          {dashboard !== "false" &&
+            <p className="text-white"><Link className="cursor-pointer" to={"/dashboard"}>Dashboard</Link></p>
+          }
+          {profile !== "false" ? (
+            <Space direction="vertical">
+              <Space wrap>
+                <Dropdown
+                  menu={{ items }}
+                  placement="right"
+                >
+                  <img
+                    className="h-[40px] w-[40px] cursor-pointer rounded-full"
+                    src={profilesrc}
+                    alt=""
+                  />
+                </Dropdown>
+              </Space>
+            </Space>
+          ) : (
+            <>
+              <Link to={"/login"} className="hover:text-orange-500">Login</Link>
+              <Link to={"/register"} className="hover:text-orange-500">Sign Up</Link>
+            </>
+          )}
+        </div>
+      )}
           </nav>
 
           <div
@@ -385,7 +421,6 @@ export default function Home() {
                   >
                  Search
                   </button>
-     
       <Modal className=""  open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
       footer={null}
       width={800}

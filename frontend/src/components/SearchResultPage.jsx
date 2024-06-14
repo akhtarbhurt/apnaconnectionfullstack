@@ -9,7 +9,7 @@ import { useGlobalContext } from '../utils/useContextApi';
 import { Link, useParams } from 'react-router-dom';
 import Popup from "./Popup"
 import { toast } from 'react-toastify';
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;  
 
 const SearchResultPage = () => {
   const { profile, setprofile, profilesrc, setprofilesrc } = usecotextFunction();
@@ -27,21 +27,7 @@ const SearchResultPage = () => {
     setFilteredResults(filterCategory);
   }, []);
 
-  // for navbar login signup and role
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/")
-      .then((res) => {
-       
-        setprofilesrc(res.data.profileImageURL);
-       
-        setprofile(true);
-      })
-      .catch((err) => {
-        console.log("token not matched", err);
-        setprofile(false);
-      });
-  }, []);
+
 
   const handleClick = () => {
     if (search.trim() === "" && selectCategory.trim() === "") {
@@ -64,8 +50,8 @@ const SearchResultPage = () => {
       <Popup />
       <div className='w-full h-full'>
         <Navbar />
-        <div className='w-full bg-[#dbdcdd] mt-[5rem]  flex justify-center items-center flex-col py-3 md:flex-row'>
-          <div className='w-full flex items-center justify-between md:w-9/12 lg:w-8/12 px-4'>
+        <div className='  w-full bg-[#dbdcdd] mt-[1rem]  flex justify-center items-center flex-col py-1 md:flex-row'>
+          <div className='  w-full flex items-center justify-between md:w-9/12 lg:w-8/12 px-4'>
             <div className='text-white text-center text-sm md:text-left md:w-3/12'>
               145 results for "All categories"
             </div>
@@ -73,18 +59,13 @@ const SearchResultPage = () => {
               <input
                 type="text"
                 placeholder='search for company or category...'
-                className='border-r-2 rounded-l-md w-2/3 p-2'
+                className='border-r-2 rounded-l-md w-11/12 px-1'
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <select className='w-1/3 p-2 rounded-r-md' onChange={(e) => setSelectCategory(e.target.value)}>
-                <option value="" defaultValue={true } disabled >All Categories</option>
-                {categorys?.map((elem) =>
-                  <option value={elem.category} key={elem._id}>{elem.category}</option>
-                )}
-              </select>
+            
               <img
                 loading='lazy'
-                className='cursor-pointer p-2'
+                className='cursor-pointer px-2 py-1'
                 src={img22}
                 alt=""
                 onClick={handleClick}
@@ -117,10 +98,10 @@ const SearchResultPage = () => {
         </div>
 
         <div className='bg-[#EEF3F7] w-full flex justify-center'>
-          <div className='w-full md:w-8/12 px-4'>
+          <div className='w-full md:w-8/12 px-4 min-h-screen'>
             {filteredResults?.length > 0 ? (
               filteredResults.map((elem) => (
-                <div key={elem._id} className='bg-white w-full py-3 px-4 mb-4 md:w-11/12 lg:w-5/12'>
+                <div key={elem._id} className='bg-white w-full mt-3 py-3 px-4 mb-4 md:w-11/12 lg:w-8/12'>
                   <div className='text-[#428BCA] flex gap-2'>
                     <Link to={`/publicreviewpage/${elem._id}`}>{elem.companyName}</Link> | <span>{elem.siteLink}</span>
                   </div>
