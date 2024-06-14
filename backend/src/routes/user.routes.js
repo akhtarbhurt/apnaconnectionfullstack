@@ -56,7 +56,6 @@ router.post("/login", handlelogin,(req,res)=>{
   res.json("loginsuccesfully")
 });
 
-
  //login get
 
  router.get("/login", restrictTo);  

@@ -67,7 +67,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className='h-full'>
+    <div className='h-full shadow-lg'>
       <nav className={`xs:hidden lg:flex w-full justify-evenly pb-3 items-center pt-4 ${isSticky ? 'fixed top-0 z-50 bg-white shadow-md pt-4 pb-4 sticky-navbar' : ''}`}>
         <div className='lg:w-4/12'>
           <Link to={'/'}>
