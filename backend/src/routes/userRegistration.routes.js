@@ -14,7 +14,10 @@ import {
   getReportedReviewsController,
   reportReviewController,
   deleteReportReviewController,
-  logoutCompany
+  logoutCompany,
+  changePasswordController, // Import the new controller
+  requestPasswordResetController,
+  resetPasswordController
 } from '../controllers/userRegistration.controller.js';
 import { upload } from '../middleware/multer.middleware.js';
 import authMiddleware from '../middleware/companyAuth.middleware.js';
@@ -35,6 +38,8 @@ router.put('/userReg/:id/partial', upload.single('logo'), partialUpdateUserRegCo
 router.post('/reportReview', reportReviewController);
 router.get('/reportedReviews', getReportedReviewsController);
 router.delete('/reportedReviews/:id', deleteReportReviewController);
-router.post('/companyLogout', authMiddleware, logoutCompany); // Ensure you have authMiddleware for protected routes
-
+router.post('/companyLogout', authMiddleware, logoutCompany);
+router.post('/changePassword', authMiddleware, changePasswordController); 
+router.post('/request-password-reset', requestPasswordResetController);
+router.post('/reset-password/:token', resetPasswordController);
 export default router;

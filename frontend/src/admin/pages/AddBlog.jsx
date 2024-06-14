@@ -74,7 +74,7 @@ export default function AddBlog() {
             rules={[{ required: true, message: 'Please upload a blog image!' }]}
           >
             <Upload name="blogImage" listType="picture" beforeUpload={() => false}>
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              <Button icon={<UploadOutlined />}  >Click to Upload</Button>
             </Upload>
           </Form.Item>
 

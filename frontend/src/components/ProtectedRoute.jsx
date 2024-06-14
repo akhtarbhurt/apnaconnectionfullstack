@@ -20,7 +20,7 @@ const ProtectedRoute = () => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // or a spinner/loader
+    return <div className=' min-h-screen flex justify-center items-center ' >Loading...</div>; // or a spinner/loader
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/companyLogin" />;

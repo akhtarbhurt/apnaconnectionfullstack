@@ -168,6 +168,7 @@ export default function AdminNavbar() {
           className="absolute right-4 top-12 bg-white shadow-lg border rounded w-48"
         >
           <Link to="/profile" className="block p-4 border-b">Profile</Link>
+          <Link to="/changePassword" className="block p-4 border-b">Change Password</Link>
           <button className="block w-full text-left p-4">Logout</button>
         </div>
       )}

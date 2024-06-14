@@ -132,7 +132,7 @@ export default function Categories() {
   return (
     <div className={`w-full p-5 min-h-screen `}>
       <div className="flex justify-between mb-5 mt-12">
-        <Button type="primary" onClick={() => {
+        <Button type="primary" className='bg-blue-500 text-white' onClick={() => {
           form.resetFields();
           setFileList([]);
           setEditingCategory(null);
@@ -204,7 +204,7 @@ export default function Categories() {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" className='bg-blue-500 text-white' htmlType="submit">
               Save
             </Button>
           </Form.Item>

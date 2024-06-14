@@ -4,6 +4,7 @@ import { broadcast } from "../index.js"; // Import the broadcast function
 import { Reply } from "../models/reply.models.js";
 import Notification from "../models/notification.models.js";
 import { UserRegistration } from "../models/userRegistration.models.js";
+import { UserNotification } from "../models/userNotification.models.js";
 
 const reviewsController = async (req, res) => {
   try {
@@ -110,8 +111,8 @@ const userReviewController = async (req, res) => {
 
 const addReplyController = async (req, res) => {
   try {
-    const { reviewID, text, isCompanyReply } = req.body;
-    
+    const { companyID, reviewID, text, isCompanyReply } = req.body;
+
     // Fetch the review to get the userID
     const review = await Reviews.findById(reviewID);
     if (!review) {
@@ -120,7 +121,7 @@ const addReplyController = async (req, res) => {
 
     const reply = await Reply.create({
       reviewID,
-      userID: review.userID, 
+      userID: review.userID,
       text,
       isCompanyReply
     });
@@ -129,10 +130,15 @@ const addReplyController = async (req, res) => {
       return res.status(400).json({ error: "Reply not created" });
     }
 
+    //find a company name
+    const {id} = req.params
+    const findCompany = await UserRegistration.findById(companyID)
+
     // Create a notification for the user
-    const notification = await Notification.create({
+    const notification = await UserNotification.create({
       userID: review.userID,
-      text: `Company replied to your review: "${text}"`,
+      text: `${findCompany?.companyName} replied to your review: "${text}"`,
+      companyName: findCompany?.companyName
     });
 
     // Broadcast the new reply and notification to WebSocket clients
@@ -150,6 +156,7 @@ const addReplyController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const getRepliesController = async (req, res) => {
   try {

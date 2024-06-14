@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
@@ -17,20 +16,17 @@ export default function UserDashboard() {
   const [currentReview, setCurrentReview] = useState({});
   const [review, setreview] = useState("");
   const [rating, setrating] = useState(0);
-
   const [id, setid] = useState("");
   const [loading, setloading] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const ws = useRef(null);
 
-
-
-
-
-
-
   useEffect(() => {
+    const storedNotifications =
+      JSON.parse(localStorage.getItem("notifications")) || [];
+    setNotifications(storedNotifications);
+
     function apicallinglogin() {
       axios
         .get("http://localhost:3000/api/v1/login")
@@ -46,25 +42,25 @@ export default function UserDashboard() {
 
     const ws = new WebSocket("ws://localhost:8080");
 
-    ws.onopen = () => {
-      console.log("Connected to WebSocket");
-    };
+    ws.current = new WebSocket("ws://localhost:3000");
 
-    ws.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === "new_reply") {
-        setNotifications((prev) => [message.data, ...prev]);
+    ws.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "new_reply") {
+        setNotifications((prev) => [...prev, data.data.notification]);
+        notification.success({
+          message: "New Reply",
+          description: data.data.notification.text,
+        });
       }
     };
 
-    ws.onclose = () => {
-      console.log("Disconnected from WebSocket");
-    };
-
     return () => {
-      ws.close();
+      if (ws.current) {
+        ws.current.close();
+      }
     };
-  }, [togetdata._id]);
+  }, [notifications]);
 
   useEffect(() => {
     if (togetdata._id) {
@@ -82,26 +78,23 @@ export default function UserDashboard() {
       .catch((err) => {
         console.log("err", err);
       });
-      
   }
 
   function fetchNotifications() {
     axios
       .get(`http://localhost:3000/api/v1/notifications/${togetdata._id}`)
       .then((res) => {
-        setNotifications(res.data.notifications);
+        const fetchedNotifications = res.data.notifications;
+        setNotifications(fetchedNotifications);
+        localStorage.setItem(
+          "notifications",
+          JSON.stringify(fetchedNotifications)
+        );
       })
       .catch((err) => {
         console.log("err", err);
       });
   }
-
-  useEffect(() => {
-    if (togetdata._id) {
-      apicalling();
-      fetchNotifications();
-    }
-  }, [togetdata]);
 
   const getTimeDifference = (createdAt) => {
     const prevDate = new Date(createdAt);
@@ -186,9 +179,7 @@ export default function UserDashboard() {
       {notifications.length > 0 ? (
         notifications.map((notif, index) => (
           <Menu.Item key={index}>
-            {`${notif.companyName}: ${notif.text} - ${new Date(
-              notif.createdAt
-            ).toLocaleString()}`}
+            {`${notif.text} - ${getTimeDifference(notif.createdAt)}`}
           </Menu.Item>
         ))
       ) : (
@@ -208,7 +199,7 @@ export default function UserDashboard() {
                 className="object-contain h-20 w-20"
                 alt="user profile"
               />
-              <span className="text-nowrap">Zeeshan Adil</span>
+              <span className="text-nowrap">{togetdata.name}</span>
             </div>
             <div className="flex gap-3">
               <div>
@@ -218,13 +209,19 @@ export default function UserDashboard() {
                   onVisibleChange={setDropdownVisible}
                 >
                   <div
-                    className=" flex justify-center relative"
+                    className="flex justify-center relative"
                     onClick={handleNotificationClick}
                   >
-                    <IoMdNotificationsOutline className=" text-[30px]" />
-                    <div className="bg-customOrange rounded-full h-[25px] w-[25px] text-center absolute left-8 flex justify-center items-center text-[14px]">
-                      {notifications.length}
-                    </div>
+                    <IoMdNotificationsOutline className="text-[30px]" />
+                    {notifications.length > 0 && (
+          <div className="notification-list">
+            {notifications.map((notif, index) => (
+              <div key={index} className="notification-item">
+                {notif.text}
+              </div>
+            ))}
+          </div>
+        )}
                   </div>
                 </Dropdown>
                 <p>notifications</p>
@@ -252,7 +249,7 @@ export default function UserDashboard() {
                       className="text-[18px]"
                       value={data.rating}
                       disabled
-                    ></Rate>
+                    />
                   </div>
                 </div>
                 <div>
@@ -272,7 +269,7 @@ export default function UserDashboard() {
                   >
                     Delete
                   </button>
-                  {loading ? <Spin className=" ml-1" /> : ""}
+                  {loading ? <Spin className="ml-1" /> : ""}
                 </div>
                 <div className="bg-slate-500 flex gap-3 text-white p-1 items-center w-24 justify-center rounded-sm">
                   <FaEdit />
@@ -311,7 +308,7 @@ export default function UserDashboard() {
                       >
                         Submit
                       </button>
-                      {loading ? <Spin className=" mt-2" /> : ""}
+                      {loading ? <Spin className="mt-2" /> : ""}
                     </form>
                   </Modal>
                 </div>

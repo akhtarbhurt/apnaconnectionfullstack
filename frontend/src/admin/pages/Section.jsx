@@ -146,7 +146,7 @@ export default function Section() {
     <div className='w-full h-screen'>
       <Card className="mb-5 mt-10">
         <h2 className="text-xl font-semibold mb-3">Section Content Form</h2>
-        <Button type="primary" onClick={() => setIsModalVisible(true)}>Add New Section Content</Button>
+        <Button type="primary"  className='bg-blue-500 text-white' onClick={() => setIsModalVisible(true)}>Add New Section Content</Button>
       </Card>
 
       <Card>

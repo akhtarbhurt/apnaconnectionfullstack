@@ -131,7 +131,7 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='min-h-screen flex justify-center items-center ' >Loading...</div>;
   }
 
   return (
@@ -140,15 +140,21 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded-lg shadow col-span-2 w-full">
           <h2 className="text-xl font-bold mb-2">Monthly Reviews</h2>
-          <Line data={reviewsData.monthlyReviews} />
+          <div className="chart-container w-full h-96">
+            <Line data={reviewsData.monthlyReviews} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
         </div>
-        <div className="bg-white p-6  rounded-lg shadow col-span-1 w-full">
+        <div className="bg-white p-6 rounded-lg shadow col-span-1 w-full">
           <h2 className="text-xl font-bold mb-2">Ratings Distribution</h2>
-          <Bar data={reviewsData.ratingsDistribution} className='w-full  ' />
+          <div className="chart-container w-full h-96">
+            <Bar data={reviewsData.ratingsDistribution} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow col-span-1 w-full">
           <h2 className="text-xl font-bold mb-2">Sentiment Analysis</h2>
-          <Pie data={reviewsData.sentimentAnalysis} />
+          <div className="chart-container w-full h-96">
+            <Pie data={reviewsData.sentimentAnalysis} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
         </div>
       </div>
     </div>

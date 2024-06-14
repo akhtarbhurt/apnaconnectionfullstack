@@ -7,6 +7,9 @@ import CompanyProfile from "./pages/CompanyProfile";
 import ReviewManagement from "./pages/ReviewManagement";
 import { Route, Routes } from "react-router-dom";
 import CompanyNotificationSeeAll from "./pages/CompanyNotificationSeeAll";
+import CompanyAuth from "./pages/CompanyAuth";
+import ResetPassword from "./pages/CompanyResetPassword";
+import CompanyResetPassword from "./pages/CompanyResetPassword";
 
 export default function MainPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -54,6 +57,8 @@ export default function MainPage() {
           <Route  path="companyProfile" element={ <CompanyProfile/> } />
           <Route  path="companyNotification" element={ <CompanyNotificationSeeAll/> } />
           <Route  path="reviewManagement" element={ <ReviewManagement/> } />
+          <Route path="profile" element={ <CompanyAuth/> } />
+          
          </Routes>
         </div>
       </div>

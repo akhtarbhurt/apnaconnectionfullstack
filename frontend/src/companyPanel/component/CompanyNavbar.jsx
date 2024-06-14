@@ -17,9 +17,6 @@ export default function CompanyNavbar({ handleTabs }) {
 
   const navigate = useNavigate();
 
-  
-  
-
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -135,12 +132,16 @@ export default function CompanyNavbar({ handleTabs }) {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:3000/api/v1/companyLogout', {}, { withCredentials: true });
-      message.success('Logout successful');
-      window.location.href = '/companyLogin';
+      await axios.post(
+        "http://localhost:3000/api/v1/companyLogout",
+        {},
+        { withCredentials: true }
+      );
+      message.success("Logout successful");
+      window.location.href = "/companyLogin";
     } catch (error) {
-      console.error('Logout error:', error);
-      message.error('Logout failed: An unknown error occurred');
+      console.error("Logout error:", error);
+      message.error("Logout failed: An unknown error occurred");
     }
   };
 
@@ -188,16 +189,27 @@ export default function CompanyNavbar({ handleTabs }) {
           } origin-top`}
         >
           <ul>
-            <Link to={'/companyPanel/companyProfile'} >
-            <li
-              className="mb-3 hover:text-customOrange cursor-pointer transition-colors duration-300"
-              onClick={() => handleTabs("profile")}
-            >
-              Profile
-            </li>
+            <Link to={"/companyPanel/companyProfile"}>
+              <li
+                className="mb-3 hover:text-customOrange cursor-pointer transition-colors duration-300"
+                onClick={() => handleTabs("profile")}
+              >
+                Profile
+              </li>
             </Link>
             <hr className="w-full mb-3" />
-            <li className="hover:text-customOrange cursor-pointer transition-colors duration-300" onClick={handleLogout} >
+            <Link to={'/companyPanel/profile'} >
+            <li
+                className="mb-3 hover:text-customOrange cursor-pointer transition-colors duration-300"
+                onClick={() => handleTabs("profile")}
+              >
+                change password
+              </li>
+            </Link>
+            <li
+              className="hover:text-customOrange cursor-pointer transition-colors duration-300"
+              onClick={handleLogout}
+            >
               Logout
             </li>
           </ul>
@@ -232,8 +244,10 @@ export default function CompanyNavbar({ handleTabs }) {
               <li className="text-gray-500">No notifications</li>
             )}
           </ul>
-          <Link to={'/companyPanel/companyNotification'} >
-            <div className="text-center p-2 flex items-center justify-center ">see all</div>
+          <Link to={"/companyPanel/companyNotification"}>
+            <div className="text-center p-2 flex items-center justify-center ">
+              see all
+            </div>
           </Link>
         </div>
       </div>
