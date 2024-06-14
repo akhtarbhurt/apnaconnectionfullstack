@@ -36,11 +36,11 @@ const ApnaNews = () => {
     setproductsdata(filteredData.slice(0, 6));
     setPagenumber(1);
   };
-
+  
   useEffect(() => {
     function apicalling() {
       axios
-        .get("http://localhost:3000/api/v1/blog")
+        .get(`${import.meta.env.VITE_API_KEY}/api/v1/blog`)
         .then((res) => {
           let answer = res.data.result;
           setData(answer);
