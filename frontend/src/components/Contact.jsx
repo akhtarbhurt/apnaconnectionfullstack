@@ -8,80 +8,119 @@ import Looter from "./Looter";
 import axios from "axios";
 import usecotextFunction from "../utils/useContext";
 axios.defaults.withCredentials = true;
-import ReCAPTCHA from "react-google-recaptcha"
-
+import ReCAPTCHA from "react-google-recaptcha";
+import QuestionData from "./QuestionData";
 
 const Contact = () => {
+
+useEffect(()=>{
+  setIsSubmitDisabled(true);
+
+},[])
+
   const [supportData, setSupportData] = useState(true);
-  const { profile, setprofile,profilesrc, setprofilesrc } = usecotextFunction();
-  const [capval,setcapval] = useState(null)
-  const [text,settext] = useState("")
-  const [token,settoken] = useState("")
+  const { profile, setprofile, profilesrc, setprofilesrc } =
+    usecotextFunction();
+ 
+  const [token, settoken] = useState("");
+  const [tokenquestion, settokenquestion] = useState("");
+
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [isSubmitDisabledquestion, setIsSubmitDisabledquestion] =
+    useState(true);
+
   const recaptchaRef = useRef(null);
+  const recaptchaRefquestiondata = useRef(null);
 
+  
 
-
-  // for navbar login signup and role
-  useEffect(()=>{
-    axios
-    .get("http://localhost:3001/")
-    .then((res) => {
-      console.log("token matched", res.data.role,"statevalue",profile);
-      setprofilesrc(res.data.profileImageURL)
-      console.log("setprofilesrc",profilesrc)
-      setprofile(true)
-    })
-    .catch((err) => {
-      console.log("token not matched", err);
-      setprofile(false)
-    });
-  },[])
-
-
-const submitdemo = async (e)=>{
-  e.preventDefault()
-   try {
-    if (token) {
-      alert("Sending POST request");
-      console.log("Sending POST request");
-      const res = await axios.post("http://localhost:3001/contact", { token });
-      console.log("Response received:", res.data);
-      recaptchaRef.current.reset();
-      settoken("");
-      setIsSubmitDisabled(true)
-    } else {
-      alert("Please verify the captcha");
+  const submitdemo = async (e) => {
+    e.preventDefault();
+    try {
+      if (token) {
+        alert("Sending POST request");
+        console.log("Sending POST request");
+        const res = await axios.post("http://localhost:3001/contact", {
+          token,
+        });
+        console.log("Response received:", res.data);
+        recaptchaRef.current.reset();
+        console.log("recaptcha", recaptchaRef.current);
+        settoken("");
+        setIsSubmitDisabled(true);
+      } else {
+        alert("Please verify the captcha");
+      }
+    } catch (err) {
+      console.log("Error occurred:", err);
     }
-  } catch (err) {
-    console.log("Error occurred:", err);
-  }
+  };
 
-}
+  // ==============question data=============
 
+  const submitdemoquestion = async (e) => {
+    e.preventDefault();
+    try {
+      if (tokenquestion) {
+        alert("Sending POST request");
+        console.log("Sending POST request");
+        const res = await axios.post("http://localhost:3001/contactquestion", {
+          tokenquestion,
+        });
+        console.log("Response received:", res.data);
 
-
-
-
-
+        recaptchaRefquestiondata.current.reset();
+        settokenquestion("");
+        setIsSubmitDisabledquestion(true);
+      } else {
+        alert("Please verify the captcha");
+      }
+    } catch (err) {
+      console.log("Error occurred:", err);
+    }
+  };
 
   const DisplaySupportData = () => {
     setSupportData(true);
   };
-
   const DisplayQuestionData = () => {
     setSupportData(false);
   };
 
-const onChange = (value) =>{
-  settoken(value)
-  setIsSubmitDisabled(false);
-} 
+  const onChange = (value) => {
+
+console.log("toget id from usereference",recaptchaRef.current.props.id,"value",value)
+if(recaptchaRef.current.props.id === "submitid"){
+
+console.log("submit",recaptchaRef.current.props.id,value)
+
+    settoken(value);
+    settokenquestion("");
+    setIsSubmitDisabled(false);
+
+  }
+
+  };
+
+
+
+  const onChangequestion = (value) => {
+    console.log("toget id from usereference",recaptchaRefquestiondata.current.props.id,"value",value)
+    if(recaptchaRefquestiondata.current.props.id === "questiondataid"){
+    
+    console.log("questiondataid",recaptchaRefquestiondata.current.props.id,value)
+        settoken(value);
+        settokenquestion("");
+        setIsSubmitDisabled(false);
+    
+      }
+    
+  };
 
   return (
     <>
       <Navbar />
-      <div className=" mt-[1rem] p-0 w-full overflow-hidden">
+      <div className="  p-0 w-full overflow-hidden">
         {/* =================topbannerimg=============== */}
 
         <div className="contactbgpic w-full mt-[-0.438rem] p-0 flex justify-center items-center bg-blue-900">
@@ -100,8 +139,8 @@ const onChange = (value) =>{
           <div
             onClick={() => DisplayQuestionData()}
             className={`${
-                !supportData ? "bg-[#EDEDED]" : "bg-white"
-              }  w-6/12 flex justify-end cursor-pointer contactleftparent pt-[0.313rem]`}
+              !supportData ? "bg-[#EDEDED]" : "bg-white"
+            }  w-6/12 flex justify-end cursor-pointer contactleftparent pt-[0.313rem]`}
           >
             <div
               className={`w-full flex    items-center md:w-5/12 cursor-pointer md:translate-x-[-2.75rem]`}
@@ -120,7 +159,7 @@ const onChange = (value) =>{
           <div
             onClick={() => DisplaySupportData()}
             className={`w-6/12  bg-${
-              supportData?"[#EDEDED]" : "white"
+              supportData ? "[#EDEDED]" : "white"
             } cursor-pointer h-[60px] flex`}
           >
             <div className=" w-full flex justify-start  items-center ml-[0.813rem] cursor-pointer">
@@ -140,7 +179,10 @@ const onChange = (value) =>{
         {/* ============inputs============ */}
         {supportData ? (
           // submit form
-          <form className=" w-full flex justify-center my-[1.875rem]" onSubmit={submitdemo}>
+          <form
+            className=" w-full flex justify-center my-[1.875rem]"
+            onSubmit={submitdemo}
+          >
             <div className="w-11/12 md:w-7/12">
               <div
                 className=" w-full flex justify-center mt-[1.125rem] xs:flex-col 
@@ -166,7 +208,6 @@ border-[#B3B4B5] p-[0.438rem] mt-[0.75rem] ml-[0px] LastNamecontact xs:ml-[0px]
                   />
                 </div>
               </div>
-
               <div
                 className=" w-full flex justify-center mt-[1.125rem] 
 xs:flex-col md:flex-row "
@@ -195,28 +236,29 @@ border-[#B3B4B5] p-[0.438rem] mt-[0.75rem] ml-[0px] Telephonecontact xs:ml-[0px]
                 <div className=" w-full flex justify-center">
                   <textarea
                     className=" border-[0.063rem] 
-border-[#B3B4B5] w-full md:w-10/12 "
-                    placeholder="Message"
+border-[#B3B4B5] w-full md:w-10/12  p-[0.438rem]"
+                    placeholder="Ask Issues"
                     rows="10"
                   ></textarea>
                 </div>
               </div>
 
-            
-
               <div className=" flex justify-center mt-3">
-
-< ReCAPTCHA 
-sitekey="6Le1-dspAAAAAMwFOKWWG4fZ3kNn1gyx3OJ9QvTR" 
-onChange={onChange}
-ref={recaptchaRef}
-/>
-
-
- </div>
+                <ReCAPTCHA
+                  sitekey="6Le1-dspAAAAAMwFOKWWG4fZ3kNn1gyx3OJ9QvTR"
+                  onChange={onChange}
+                  ref={recaptchaRef}
+                  id="submitid"
+                />
+              </div>
 
               <div className=" w-full flex justify-center my-[0.875rem]">
-                <button type="submit" className="xs:w-4/12 md:w-2/12 bg-[#F3661E] text-white rounded-3xl p-[0.625rem]" disabled={isSubmitDisabled}>
+                <button
+              
+                  type="submit"
+                  className="xs:w-4/12 md:w-2/12 bg-[#F3661E] text-white rounded-3xl p-[0.625rem]"
+                  disabled={isSubmitDisabled}
+                >
                   Submit
                 </button>
               </div>
@@ -224,86 +266,7 @@ ref={recaptchaRef}
           </form>
         ) : (
           //question data form
-          <form className=" w-full flex justify-center my-[1.875rem]" onSubmit={submitdemo}>
-            <div className="w-10/12 md:w-7/12">
-              <div
-                className=" w-full flex justify-center mt-[1.125rem] xs:flex-col 
-md:flex-row"
-              >
-                <div className=" w-full md:w-5/12 ">
-                  <input
-                    type="text"
-                    placeholder=" Name"
-                    className=" w-full border-[0.063rem] 
-border-[#B3B4B5] p-[0.438rem]"
-                  />
-                </div>
-                <div className="ml-[0px] w-full  md:w-5/12 ">
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    className=" w-full border-[0.063rem] 
-border-[#B3B4B5] p-[0.438rem] mt-[0.75rem] ml-[0px] LastNamecontact xs:ml-[0px] 
-"
-                  />
-                </div>
-              </div>
-
-              <div
-                className=" w-full flex justify-center mt-[1.125rem] 
-xs:flex-col md:flex-row "
-              >
-                <div className=" w-full md:w-5/12 ">
-                  <input
-                    type="text"
-                    placeholder=" Email"
-                    className=" w-full border-[0.063rem] 
-border-[#B3B4B5] p-[0.438rem]"
-                  />
-                </div>
-                <div className="ml-0 xs:mt-[0.75rem] md:w-5/12 telephoneparent ">
-                  <input
-                    type="text"
-                    placeholder="Telephone"
-                    className=" w-full border-[0.063rem] 
-border-[#B3B4B5] p-[0.438rem] mt-[0.75rem] ml-[0px] Telephonecontact xs:ml-[0px]"
-                  />
-                </div>
-              </div>
-
-              <div className=" w-full flex justify-center mt-[1.125rem]">
-                <div className=" w-11/12 flex justify-center">
-                  <textarea
-                    className=" border-[0.063rem] 
-border-[#B3B4B5] w-11/12"
-                    placeholder="Message"
-                    rows="10"
-                  ></textarea>
-                </div>
-              </div>
-
-             
-              <div className=" flex justify-center mt-3">
-
-              < ReCAPTCHA 
-sitekey="6Le1-dspAAAAAMwFOKWWG4fZ3kNn1gyx3OJ9QvTR" 
-onChange={onChange}
-ref={recaptchaRef}
-/>
-{/* < ReCAPTCHA sitekey="6Le1-dspAAAAAMwFOKWWG4fZ3kNn1gyx3OJ9QvTR" 
-onChange={(val) =>setcapval(val)}/> */}
-
- </div>
-              <div className=" w-full flex justify-center my-[0.875rem]">
-                <button className="xs:w-4/12 md:w-2/12 bg-[#F3661E] text-white rounded-3xl p-[0.625rem]" type="submit" disabled={isSubmitDisabled}>
-                  Question data
-                </button>
-              </div>
-            </div>
-
-          
-          </form>
-
+         <QuestionData />
         )}
 
         {/* ======================bottom============ */}

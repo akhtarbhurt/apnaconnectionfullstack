@@ -10,21 +10,7 @@ const Reviewdone = () => {
   const { profile, setprofile,profilesrc, setprofilesrc } = usecotextFunction();
 
  
-  // for navbar login signup and role
-useEffect(()=>{
-  axios
-  .get("http://localhost:3000/")
-  .then((res) => {
-    console.log("token matched", res.data.role,"statevalue",profile);
-    setprofilesrc(res.data.profileImageURL)
-    console.log("setprofilesrc",profilesrc)
-    setprofile(true)
-  })
-  .catch((err) => {
-    console.log("token not matched", err);
-    setprofile(false)
-  });
-},[])
+ 
   return (
 
     <div className=' w-full overflow-hidden reviewdone'>

@@ -7,9 +7,8 @@ import upload from "../middleware/uploadImg.middleware.js"
 import crypto from 'crypto';
 import User from "../models/user.models.js"
 import signupSchema from "../validator/auth.validator.js"
-import cloudinaryUser from "../utils/userCloudinary.js"
 import { Warning } from "../models/warning.models.js"
-
+import cloudinaryUser from "../utils/userCloudinary.js"
 const handleregister = async (req, res) => {
   console.log("chalraha hai yaha tak")
 
@@ -110,91 +109,50 @@ res.clearCookie('token');
   };
 
 
+
+
 const handleUpdateregister = async (req, res) => {
-
-//   try{
-
-// const formdata = await req.body
-// const {id} = await req.params
-
-// // const payload = await User.findByIdAndUpdate(id,{
-// //   name, email,password,profileImageURL
-// // })
-
-// console.log("req body",id, formdata)
-
-// return res.json({msg:id})
-
-// }
-
-// catch(err){
-//   console.log(err)
-// }
-
-
-// try {
-//   const { name, email, password } = req.body;
-//   const { id } = req.params;
-
-//   // Process file if uploaded
-//   let profileImageURL;
-//   if (req.file) {
-//     // Upload to cloudinary or any other storage and get the URL
-//     const result = await cloudinary.uploader.upload(req.file.path);
-//     profileImageURL = result.url;
-//   }
-
-//   // Find and update user
-//   const updatedUser = await User.findByIdAndUpdate(id, {
-//     name,
-//     email,
-//     password,
-//     profileImageURL
-//   }, { new: true });
-
-//   console.log("Updated user:", updatedUser);
-//   res.json({ msg: "Profile updated successfully", user: updatedUser });
-
-// } catch (err) {
-//   console.log(err);
-//   res.status(500).json({ msg: "Internal server error" });
-// }
-
-try{
-const { name, email, password } = req.body;
+  try {
+    const { name, email, password, newpassword, confirmpassword } = req.body;
     const { id } = req.params;
 
-    // Initialize an update object
     let updateData = {};
 
-    // Add provided fields to the update object
     if (name) updateData.name = name;
     if (email) updateData.email = email;
-    // if (password) updateData.password = password; // Consider hashing the password here if needed
-// Hash the password if it is provided
-if (password) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  updateData.password = hashedPassword;
-}
-    // Process file if uploaded
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path);
-      updateData.profileImageURL = result.url;
-      console.log("file checking inside",result)
+
+    if (password) {
+      let usrdata = await User.findById(id);
+
+      if (!usrdata) return res.status(404).json({ error: "User not found" });
+
+      const passwordMatch = await bcrypt.compare(password, usrdata.password);
+      if (!passwordMatch) {
+        return res.status(400).json({ msg: "Current password is incorrect" });
+      }
+
+      if (newpassword !== confirmpassword) {
+        return res.status(400).json({ msg: "New passwords do not match" });
+      }
+
+      const hashedPassword = await bcrypt.hash(newpassword, 10);
+      updateData.password = hashedPassword;
     }
-    // Find and update user with the update object
+
+    if (req.file) {
+      const result = await cloudinaryUser.uploader.upload(req.file.path);
+      updateData.profileImageURL = result.url;
+    }
+
     const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
-    console.log("file path checking outside",req.file)
 
-    console.log("Updated user:", updatedUser);
     res.json({ msg: "Profile updated successfully", user: updatedUser });
-
   } catch (err) {
     console.log(err);
     res.status(500).json({ msg: "Internal server error" });
   }
-
 };
+
 
 const handleGenerateWarning = async (req, res)=>{
   try {
@@ -226,37 +184,4 @@ const getHandleGenerateWarning = async (req, res)=>{
   }
 }
 
-const blockUser = async (req, res) => {
-  try {
-    const { userID } = req.params;
-    const user = await User.findByIdAndUpdate(userID, { status: 'blocked' }, { new: true });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json({ message: 'User blocked successfully', user });
-  } catch (error) {
-    console.error('Error blocking user:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
-// Controller to unblock a user
-const unblockUser = async (req, res) => {
-  try {
-    const { userID } = req.params;
-    const user = await User.findByIdAndUpdate(userID, { status: 'unblocked' }, { new: true });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json({ message: 'User unblocked successfully', user });
-  } catch (error) {
-    console.error('Error unblocking user:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
-
-export { handleregister, handleUpdateregister, handleGenerateWarning, getHandleGenerateWarning, blockUser, unblockUser }
+export { handleregister, handleUpdateregister, handleGenerateWarning, getHandleGenerateWarning }
