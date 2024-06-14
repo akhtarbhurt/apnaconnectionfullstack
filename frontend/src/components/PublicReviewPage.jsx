@@ -128,21 +128,21 @@ const PublicReviewPage = () => {
       <div className="h-full w-full mt-[12px] bg-[#F2F2F5] publicreviewpage md:mt-[96px]">
         <div className="w-full h-[280px] bg-white md:h-full">
           <div className="w-full topreviewpage flex justify-center flex-col items-center">
-            <div className="w-full flex mb-[40px] justify-between items-center xs:flex-col md:w-10/12 md:h-[150px] md:flex-row">
-              <div className="w-full md:w-6/12 flex items-center justify-between md:justify-center">
+            <div className="w-full flex mb-[40px] justify-between items-center xs:flex-col md:w-10/12 md:h-[150px] md:flex-row ">
+              <div className="w-full md:w-7/12 flex items-center justify-between md:justify-center ">
                 <div>
                   <img
                     loading="lazy"
                     src={company?.logo}
                     alt={company?.companyName}
-                    className="h-[100px] w-[100px]"
+                    className="h-[100px] w-[100px] object-fill"
                   />
                 </div>
-                <div className="translate-x-[55px] md:translate-x-[0px]">
-                  <h2 className="text-[15px] md:text-[40px] font-bold">
+                <div className="translate-x-[59px] md:translate-x-[10px]">
+                  <h2 className="text-[15px] md:text-[30px] font-bold">
                     {company?.companyName}
                   </h2>
-                  <p className="text-[13px] font-normal">
+                  <p className="text-[13px] font-normal ">
                     Reviews 7,958 • Great
                   </p>
                   <div className="flex items-center">
@@ -160,12 +160,12 @@ const PublicReviewPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full flex justify-center md:w-6/12">
+              <div className="w-full flex justify-center md:w-6/12 ">
                 <a
                   href={company?.siteLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-11/12 border-3 border-[#DCDCE6] flex justify-around items-center md:w-7/12 md:h-[104px]"
+                  className="w-11/12 border-2 flex justify-around items-center md:w-7/12 md:h-[104px]"
                 >
                   <div className="flex items-center">
                     <img
@@ -174,8 +174,8 @@ const PublicReviewPage = () => {
                       alt={company?.companyName}
                       className="h-[50px]"
                     />
-                    <p className="ml-[12px] text-[22px] font-normal">
-                      {company?.companyName}
+                    <p className="ml-[12px] text-[12px] text-blue-600 font-normal">
+                      Visit This Website {company?.companyName}
                     </p>
                   </div>
                   <MdOutlineKeyboardArrowRight />
@@ -199,7 +199,7 @@ const PublicReviewPage = () => {
                 </div>
                 <img loading="lazy" src={IMG39} alt="Icon" />
               </div>
-              <div className="w-full flex justify-center my-[19px]">
+              {/* <div className="w-full flex justify-center my-[19px]">
                 <div className="w-full flex justify-center md:justify-end">
                   <div className="w-11/12 flex justify-between items-center md:w-6/12">
                     <div className="text-[12px]">Sort by:</div>
@@ -217,7 +217,7 @@ const PublicReviewPage = () => {
                     />
                   </div>
                 </div>
-              </div>
+              </div> */}
               {reviews?.map((review) => (
                 <div
                   key={review._id}
@@ -227,7 +227,7 @@ const PublicReviewPage = () => {
                     <div className="flex items-center pt-[5px]">
                       <div>
                         {" "}
-                        <img src={isProfile.profileImageURL} alt="" />{" "}
+                        <img src={isProfile.profileImageURL} className=" h-9" alt="" />{" "}
                       </div>
                       <div className="ml-[12px]">
                         <div>{review.name}</div>
@@ -330,26 +330,9 @@ const PublicReviewPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col items-center bg-white">
-                <img loading="lazy" src={IMG45} alt="Promo" />
-                <img
-                  loading="lazy"
-                  src={IMG46}
-                  alt="Promo"
-                  className="mt-[15px]"
-                />
-                <img
-                  loading="lazy"
-                  src={IMG47}
-                  alt="Promo"
-                  className="mt-[15px]"
-                />
-                <img
-                  loading="lazy"
-                  src={IMG48}
-                  alt="Promo"
-                  className="mt-[15px]"
-                />
+              
+              <div className="">
+                <img className=" h-[490px] object-fill" src="https://www.creatopy.com/blog/wp-content/uploads/2019/01/creative-advertising-ideas-2.png" alt="" />
               </div>
             </div>
           </div>
