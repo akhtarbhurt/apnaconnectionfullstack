@@ -25,7 +25,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/profile")
+      .get(`${import.meta.env.VITE_API_KEY}/api/v1/profile`)
       .then((res) => {
         console.log("token matched", res.data.user, "statevalue");
         setName(res.data.user.name)
@@ -53,7 +53,7 @@ const UserProfile = () => {
       formdata.append("newpassword", newpassword);
       formdata.append("confirmpassword", confirmpassword);
       formdata.append("profileImageURL", file || profilesrc);
-      axios.post(`http://localhost:3000/api/v1/profile/${id}`, formdata)
+      axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/profile/${id}`, formdata)
       .then((res) => {
         console.log("profile", res);
         localStorage.setItem("tokenapnaconnection", res.data.user.profileImageURL);

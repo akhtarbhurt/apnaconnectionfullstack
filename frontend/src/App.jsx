@@ -45,6 +45,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AllCategories from "./components/AllCategories";
 import UserProfile from "./components/UserProfile";
 import CompanyResetPassword from "./companyPanel/pages/CompanyResetPassword";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 function App() {
   const [count, setCount] = useState(0);
 
@@ -113,11 +114,12 @@ function App() {
             <Route path="/allcategories" element={<AllCategories />} />
 
             <Route path="/admin/*" element={<Main />} />
-
-            <Route
-              path="/admin"
-              element={<Navigate to="/admin/home" replace />}
-            />
+            <Route element={<ProtectedAdminRoute />}>
+              <Route
+                path="/admin"
+                element={<Navigate to="/admin/home" replace />}
+              />
+            </Route>
             {/* this is company panel  */}
             <Route element={<ProtectedRoute />}>
               <Route path="/companyPanel/*" element={<MainPage />} />
@@ -126,7 +128,10 @@ function App() {
               path="/companyPanel"
               element={<Navigate to={"/companyPanel/home"} />}
             />
-            <Route path="/reset-password/:token" element={<CompanyResetPassword/>} />
+            <Route
+              path="/reset-password/:token"
+              element={<CompanyResetPassword />}
+            />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

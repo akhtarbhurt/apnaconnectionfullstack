@@ -25,7 +25,7 @@ const PublicReviewPage = () => {
   const { id } = useParams();
   const [isProfile, setIsProfile] = useState([]);
   const [likes, setLikes] = useState({});
-
+  const [findLength, setFindLength] = useState([])
   const company = addCompany?.find((elem) => elem._id === id);
   const reviews = companyReview?.filter((elem) => elem.companyID === id);
   console.log("company review is", reviews);
@@ -34,8 +34,8 @@ const PublicReviewPage = () => {
     const fetchProfileAndLikes = async () => {
       try {
         const [profileResponse, likesResponse] = await Promise.all([
-          axios.get("http://localhost:3000/api/v1/"),
-          axios.get("http://localhost:3000/api/v1/like"),
+          axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/`),
+          axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/like`),
         ]);
         setIsProfile(profileResponse.data);
         setLikes(
@@ -105,7 +105,7 @@ const PublicReviewPage = () => {
 
   const handleLike = async (reviewID) => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/like`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/like`, {
         likeBy: isProfile.name,
         postID: reviewID,
         userID: isProfile._id,
@@ -122,6 +122,26 @@ const PublicReviewPage = () => {
       console.log(error);
     }
   };
+
+ useEffect(()=>{
+  const reviewLength = async ()=>{
+    const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyReviews/${id}`)
+    setFindLength(response.data.payload)
+  } 
+  reviewLength()
+ },[])
+
+ const ratings = findLength?.map(review => review.rating);
+
+// Calculate the sum of all the ratings
+const sumOfRatings = ratings.reduce((acc, rating) => acc + rating, 0);
+
+// Calculate the average rating
+const averageRating = sumOfRatings / ratings.length;
+
+console.log("Average Rating:", averageRating.toFixed(2)); // Output: 3.20
+
+ console.log("review length is", findLength.length )
   return (
     <>
       <Navbar />
@@ -143,12 +163,12 @@ const PublicReviewPage = () => {
                     {company?.companyName}
                   </h2>
                   <p className="text-[13px] font-normal ">
-                    Reviews 7,958 • Great
+                    Reviews {findLength.length}
                   </p>
                   <div className="flex items-center">
-                    <Rate tooltips={desc} value={Math.ceil(3.7)} />
+                    <Rate tooltips={desc} value={averageRating.toFixed(2)} />
                     <div className="flex items-center ml-[4px]">
-                      <p>4.1</p>
+                      <p>{averageRating.toFixed(2)}</p>
                       <img src={IMG36} alt="Rating" />
                     </div>
                   </div>
@@ -199,25 +219,7 @@ const PublicReviewPage = () => {
                 </div>
                 <img loading="lazy" src={IMG39} alt="Icon" />
               </div>
-              {/* <div className="w-full flex justify-center my-[19px]">
-                <div className="w-full flex justify-center md:justify-end">
-                  <div className="w-11/12 flex justify-between items-center md:w-6/12">
-                    <div className="text-[12px]">Sort by:</div>
-                    <div className="bg-[#454554] p-[4px] text-[12px] text-white mr-[8px]">
-                      Most relevant
-                    </div>
-                    <div className="bg-[#fbfbfb] p-[4px] border-[1px] text-[12px] border-[#9A9AAD]">
-                      Most recent
-                    </div>
-                    <img
-                      loading="lazy"
-                      src={IMG36}
-                      alt="Sort Icon"
-                      className="ml-[7px]"
-                    />
-                  </div>
-                </div>
-              </div> */}
+             
               {reviews?.map((review) => (
                 <div
                   key={review._id}

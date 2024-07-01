@@ -16,7 +16,7 @@ export default function Reviews() {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/`); 
       setProfile(response.data);
       setIsLoading(false);
      
@@ -58,7 +58,7 @@ export default function Reviews() {
   const handleReviewFunction = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/reviews", isReview);
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/reviews`, isReview);
       if (response.status === 200) {
         toast.success("Review has been submitted");
         // Optionally, reset the form or update the state with new review

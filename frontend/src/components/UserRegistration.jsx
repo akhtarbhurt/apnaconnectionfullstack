@@ -45,7 +45,7 @@ export default function UserRegistration() {
         formData.append("category", otherCategory);
       }
 
-      const response = await axios.post('http://localhost:3000/api/v1/userReg', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/userReg`, formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -74,7 +74,7 @@ export default function UserRegistration() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/category`);
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/category`);
       setCategories(response.data.result);
     } catch (error) {
       console.error("Failed to fetch categories:", error);

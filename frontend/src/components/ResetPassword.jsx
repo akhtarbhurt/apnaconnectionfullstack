@@ -17,7 +17,7 @@ function ResetPassword() {
     const handleSubmit = (e) => {
       setloader(true)
         e.preventDefault()
-        axios.post(`http://localhost:3000/api/v1/resetpassword/${id}/${token}`, {password})
+        axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/resetpassword/${id}/${token}`, {password})
         .then(res => {
             if(res.data.Status === "Success") {
               setloader(false)

@@ -13,7 +13,7 @@ export default function Report() {
     const fetchReportedReviews = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/reportedReviews');
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/reportedReviews`);
         const reportedReviews = response.data.result.reverse();
 
         const formattedData = reportedReviews.map((review, index) => ({
@@ -43,17 +43,17 @@ export default function Report() {
 
   const handleMenuClick = async ({ key, item }) => {
     const { userID, userName } = item.props.review;
-
+  
     try {
       if (!userID) {
         notification.error({ message: 'UserID is missing for the current review' });
         return;
       }
-
+  
       const url = key === 'block' 
         ? `http://localhost:3000/api/v1/block/${userID}`
         : `http://localhost:3000/api/v1/unblock/${userID}`;
-
+  
       await axios.patch(url);
       notification.success({ message: `User ${userName} ${key}ed successfully` });
     } catch (error) {
@@ -61,6 +61,7 @@ export default function Report() {
       notification.error({ message: `Failed to ${key} user` });
     }
   };
+  
 
   const showModal = (review) => {
     setCurrentReview(review);
@@ -77,7 +78,7 @@ export default function Report() {
       };
 
       try {
-        await axios.post('http://localhost:3000/api/v1/warning', warningPayload);
+        await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/warning`, warningPayload);
         notification.success({ message: 'Warning generated successfully' });
 
         setDataSource((prevDataSource) =>
@@ -105,8 +106,8 @@ export default function Report() {
 
   const deleteReview = async () => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/reviews/${currentReview.reviewId}`);
-      await axios.delete(`http://localhost:3000/api/v1/reportedReviews/${currentReview._id}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/reviews/${currentReview.reviewId}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/reportedReviews/${currentReview._id}`);
       notification.success({ message: 'Review deleted successfully' });
 
       setDataSource(dataSource.filter(item => item._id !== currentReview._id));
@@ -123,6 +124,7 @@ export default function Report() {
       <Menu.Item key="unblock" review={currentReview}>Unblock</Menu.Item>
     </Menu>
   );
+  
 
   const columns = [
     {
@@ -164,6 +166,7 @@ export default function Report() {
       ),
     },
   ];
+  
 
   return (
     <div className='w-full min-h-screen p-5'>

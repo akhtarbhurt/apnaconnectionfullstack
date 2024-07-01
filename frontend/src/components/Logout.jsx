@@ -11,7 +11,7 @@ const Logout = () => {
     useEffect(()=>{
 
     
-    axios.get("http://localhost:3000/api/v1/logout")
+    axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/logout`)
 
   .then((res) => {
     console.log("logout",res)

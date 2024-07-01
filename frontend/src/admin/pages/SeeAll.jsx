@@ -7,7 +7,7 @@ export default function SeeAll() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/v1/notifications');
+        const response = await fetch(`${import.meta.env.VITE_API_KEY}/api/v1/notifications`);
         const data = await response.json();
         setNotifications(data.result.reverse());
       } catch (error) {

@@ -9,9 +9,9 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique:true
+      unique: true,
     },
-   
+
     password: {
       type: String,
       required: true,
@@ -22,28 +22,27 @@ const userSchema = new Schema(
     },
     profileImageURL: {
       type: String,
-
     },
-    role:{
+    role: {
       type: String,
-      required:true,
-      default:"normal"
-  },
-  emailVerified: {
-    type: Boolean,
-    default: false
-},
-Token:{
-  type: String
-},
-warnings: {
-  type: [String],
-  default: []
-},
-  status:{
-    type: String,
-    default: "unblock"
-  }
+      required: true,
+      default: "normal",
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    Token: {
+      type: String,
+    },
+    warnings: {
+      type: [String],
+      default: [],
+    },
+    status: {
+      type: String,
+      default: "unblock",
+    },
   },
   { timestamps: true }
 );
@@ -51,4 +50,4 @@ warnings: {
 const User = model("firstclustersignup", userSchema);
 
 // module.exports = User;
-export default User
+export default User;

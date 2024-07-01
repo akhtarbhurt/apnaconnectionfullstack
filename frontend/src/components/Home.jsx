@@ -54,7 +54,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/`); // Adjust endpoint if necessary
         setIsProfile(response.data);
       } catch (err) {
         console.log("Error", err);
@@ -131,7 +131,7 @@ export default function Home() {
     const fetchUserReg = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/userReg"
+          `${import.meta.env.VITE_API_KEY}/api/v1/userReg`
         );
 
         let datas = response.data.result;

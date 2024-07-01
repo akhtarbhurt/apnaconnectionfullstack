@@ -20,7 +20,7 @@ export default function Heading() {
   const fetchHeadings = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:3000/api/v1/heading");
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/heading`);
       setDataSource(response.data.result);
     } catch (error) {
       console.error("Failed to fetch headings:", error);
@@ -47,7 +47,7 @@ export default function Heading() {
       let response;
       if (editingItem) {
         response = await axios.put(
-          `http://localhost:3000/api/v1/heading/${editingItem._id}`,
+          `${import.meta.env.VITE_API_KEY}/api/v1/heading/${editingItem._id}`,
           formData,
           {
             headers: {
@@ -57,7 +57,7 @@ export default function Heading() {
         );
       } else {
         response = await axios.post(
-          "http://localhost:3000/api/v1/heading",
+          `${import.meta.env.VITE_API_KEY}/api/v1/heading`,
           formData,
           {
             headers: {
@@ -95,7 +95,7 @@ export default function Heading() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/v1/heading/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/heading/${id}`);
       toast.success("Heading deleted successfully");
       fetchHeadings();
     } catch (error) {

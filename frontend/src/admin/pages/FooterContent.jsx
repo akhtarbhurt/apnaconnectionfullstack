@@ -20,7 +20,7 @@ export default function FooterContent() {
   const fetchFooters = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/footer');
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/footer`);
       setDataSource(response.data.result);
     } catch (error) {
       console.error("Failed to fetch footers:", error);
@@ -43,7 +43,7 @@ export default function FooterContent() {
       let response;
       if (editingItem) {
         response = await axios.put(
-          `http://localhost:3000/api/v1/footer/${editingItem._id}`,
+          `${import.meta.env.VITE_API_KEY}/api/v1/footer/${editingItem._id}`,
           formData,
           {
             headers: {
@@ -53,7 +53,7 @@ export default function FooterContent() {
         );
       } else {
         response = await axios.post(
-          'http://localhost:3000/api/v1/footer',
+          `${import.meta.env.VITE_API_KEY}/api/v1/footer`,
           formData,
           {
             headers: {
@@ -91,7 +91,7 @@ export default function FooterContent() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/v1/footer/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/footer/${id}`);
       toast.success("Footer content deleted successfully");
       fetchFooters();
     } catch (error) {

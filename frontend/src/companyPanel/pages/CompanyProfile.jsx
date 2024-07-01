@@ -15,7 +15,7 @@ const RegistrationStepper = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/v1/companyLogin')
+    axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`)
       .then(response => {
         const data = response.data.result;
         form.setFieldsValue({
@@ -33,7 +33,7 @@ const RegistrationStepper = () => {
   }, [form]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/v1/category')
+    axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/category`)
       .then(response => {
         setCategories(response.data.result);
       })
@@ -218,7 +218,7 @@ const RegistrationStepper = () => {
         endTime: values.endTime ? values.endTime.format('HH:mm') : null,
       };
 
-      const response = await axios.put(`http://localhost:3000/api/v1/userReg/${userId}/partial`, formattedValues);
+      const response = await axios.put(`${import.meta.env.VITE_API_KEY}/api/v1/userReg/${userId}/partial`, formattedValues);
       setUserId(response.data.result._id);
     } catch (info) {
       console.log('Validate Failed:', info);
@@ -240,7 +240,7 @@ const RegistrationStepper = () => {
         endTime: values.endTime ? values.endTime.format('HH:mm') : null,
       };
 
-      await axios.put(`http://localhost:3000/api/v1/userReg/${userId}/partial`, formattedValues);
+      await axios.put(`${import.meta.env.VITE_API_KEY}/api/v1/userReg/${userId}/partial`, formattedValues);
       notification.success({ message: 'Registration successful' });
       localStorage.removeItem('progress');
     } catch (error) {

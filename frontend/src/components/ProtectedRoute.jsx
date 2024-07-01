@@ -8,7 +8,7 @@ const ProtectedRoute = () => {
   React.useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/companyLogin', {
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`, {
           withCredentials: true, // Ensure cookies are sent
         });
         setIsAuthenticated(true);

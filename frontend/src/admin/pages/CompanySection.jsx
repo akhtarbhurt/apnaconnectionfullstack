@@ -40,7 +40,7 @@ export default function CompanySection() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/userReg`, {
+        `${import.meta.env.VITE_API_KEY}/api/v1/userReg`, {
           params: {
             page,
             size,
@@ -87,7 +87,7 @@ export default function CompanySection() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/v1/userReg/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/userReg/${id}`);
       fetchCompanies(currentPage, pageSize, "");
       toast.success("Company deleted successfully");
     } catch (error) {
@@ -113,7 +113,7 @@ export default function CompanySection() {
       }
 
       const response = await axios.put(
-        `http://localhost:3000/api/v1/userReg/${editingCompany._id}`,
+        `${import.meta.env.VITE_API_KEY}/api/v1/userReg/${editingCompany._id}`,
         formData,
         {
           headers: {

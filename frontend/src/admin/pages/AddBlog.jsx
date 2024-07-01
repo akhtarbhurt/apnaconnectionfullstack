@@ -15,7 +15,7 @@ export default function AddBlog() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/blog', formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/blog`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

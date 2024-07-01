@@ -29,7 +29,7 @@ export default function UserDashboard() {
 
     function apicallinglogin() {
       axios
-        .get("http://localhost:3000/api/v1/login")
+        .get(`${import.meta.env.VITE_API_KEY}/api/v1/login`)
         .then((res) => {
           settogetdata(res.data.msg);
         })
@@ -39,39 +39,45 @@ export default function UserDashboard() {
     }
 
     apicallinglogin();
+  }, []);
 
+  useEffect(() => {
     const ws = new WebSocket("ws://localhost:8080");
 
-    ws.current = new WebSocket("ws://localhost:3000");
+    ws.current = ws;
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "new_reply") {
-        setNotifications((prev) => [...prev, data.data.notification]);
+        const newNotification = {
+          _id: data.data.notification._id,
+          text: data.data.notification.text,
+          createdAt: data.data.notification.createdAt,
+          seen: false,
+        };
+        setNotifications((prev) => [...prev, newNotification]);
         notification.success({
           message: "New Reply",
           description: data.data.notification.text,
         });
       }
     };
-
     return () => {
       if (ws.current) {
         ws.current.close();
       }
     };
-  }, [notifications]);
+  }, []);
 
   useEffect(() => {
     if (togetdata._id) {
       apicalling();
-      fetchNotifications();
     }
   }, [togetdata]);
 
   function apicalling() {
     axios
-      .get(`http://localhost:3000/api/v1/userReviews/${togetdata._id}`)
+      .get(`${import.meta.env.VITE_API_KEY}/api/v1/userReviews/${togetdata._id}`)
       .then((res) => {
         setreviewdata(res.data.payload);
       })
@@ -80,24 +86,27 @@ export default function UserDashboard() {
       });
   }
 
-  function fetchNotifications() {
-    axios
-      .get(`http://localhost:3000/api/v1/notifications/${togetdata._id}`)
-      .then((res) => {
-        const fetchedNotifications = res.data.notifications;
-        setNotifications(fetchedNotifications);
-        localStorage.setItem(
-          "notifications",
-          JSON.stringify(fetchedNotifications)
-        );
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
-  }
+  useEffect(() => {
+    if (notifications.length > 0) {
+      localStorage.setItem("notifications", JSON.stringify(notifications));
+    }
+  }, [notifications]);
+
+  const handleNotificationClick = () => {
+    // Mark all notifications as seen
+    const updatedNotifications = notifications.map((notif) => ({
+      ...notif,
+      seen: true,
+    }));
+    setNotifications(updatedNotifications);
+    setDropdownVisible(!dropdownVisible);
+  };
 
   const getTimeDifference = (createdAt) => {
     const prevDate = new Date(createdAt);
+    if (isNaN(prevDate.getTime())) {
+      return "Invalid Date";
+    }
     const currentDate = new Date();
     const diffTime = currentDate - prevDate;
     const diffSeconds = Math.floor(diffTime / 1000);
@@ -127,7 +136,7 @@ export default function UserDashboard() {
     setloading(true);
     let id = dele._id;
     axios
-      .delete(`http://localhost:3000/api/v1/reviews/${id}`, { id })
+      .delete(`${import.meta.env.VITE_API_KEY}/api/v1/reviews/${id}`, { id })
       .then((res) => {
         setloading(false);
         apicalling();
@@ -150,7 +159,7 @@ export default function UserDashboard() {
     setloading(true);
     e.preventDefault();
     axios
-      .put(`http://localhost:3000/api/v1/reviews/${id}`, { review, rating })
+      .put(`${import.meta.env.VITE_API_KEY}/api/v1/reviews/${id}`, { review, rating })
       .then((res) => {
         apicalling();
         setid("");
@@ -170,21 +179,23 @@ export default function UserDashboard() {
     setreview(e.target.value);
   };
 
-  const handleNotificationClick = () => {
-    setDropdownVisible(!dropdownVisible);
-  };
+  const unseenNotificationsCount = notifications.filter(
+    (notif) => !notif.seen
+  ).length;
 
   const menu = (
     <Menu>
-      {notifications.length > 0 ? (
-        notifications.map((notif, index) => (
-          <Menu.Item key={index}>
-            {`${notif.text} - ${getTimeDifference(notif.createdAt)}`}
-          </Menu.Item>
-        ))
-      ) : (
-        <Menu.Item>No new notifications</Menu.Item>
-      )}
+      <Menu.ItemGroup title="Notifications">
+        {notifications.length > 0 ? (
+          notifications.map((notif, index) => (
+            <Menu.Item key={index}>
+              {notif.text} - {getTimeDifference(notif.createdAt)}
+            </Menu.Item>
+          ))
+        ) : (
+          <Menu.Item>No new notifications</Menu.Item>
+        )}
+      </Menu.ItemGroup>
     </Menu>
   );
 
@@ -203,28 +214,30 @@ export default function UserDashboard() {
             </div>
             <div className="flex gap-3">
               <div>
-                <Dropdown
-                  overlay={menu}
-                  visible={dropdownVisible}
-                  onVisibleChange={setDropdownVisible}
-                >
-                  <div
-                    className="flex justify-center relative"
-                    onClick={handleNotificationClick}
+                <div className="notifications-container  ">
+                  <Dropdown
+                    overlay={menu}
+                    visible={dropdownVisible}
+                    onVisibleChange={setDropdownVisible}
+                    trigger={["click"]}
+                    
                   >
-                    <IoMdNotificationsOutline className="text-[30px]" />
-                    {notifications.length > 0 && (
-          <div className="notification-list">
-            {notifications.map((notif, index) => (
-              <div key={index} className="notification-item">
-                {notif.text}
-              </div>
-            ))}
-          </div>
-        )}
-                  </div>
-                </Dropdown>
-                <p>notifications</p>
+                    <div onClick={handleNotificationClick}  >
+                      <IoMdNotificationsOutline className="notification-icon text-2xl " />
+                      {unseenNotificationsCount > 0 && (
+                        <>
+                        <span className="notification-badge">
+                          {unseenNotificationsCount}
+                        </span>
+                         
+                        </>
+                      )}
+                    
+                    </div>
+                  </Dropdown>
+                  
+                </div>
+                
               </div>
             </div>
           </div>
@@ -281,41 +294,46 @@ export default function UserDashboard() {
                   >
                     Edit
                   </Button>
-                  <Modal
-                    open={isModalOpen}
-                    onOk={handleOk}
-                    onCancel={handleCancel}
-                    footer={null}
-                  >
-                    <form
-                      className="flex flex-col justify-center items-center"
-                      onSubmit={handleupdatedatafunction}
-                    >
-                      <textarea
-                        className="border-2 border-orange-500 w-11/12 h-[19vh]"
-                        placeholder="Update your review"
-                        value={review}
-                        onChange={updatetextarea}
-                      />
-                      <Rate
-                        className="my-3 text-[22px]"
-                        value={rating}
-                        onChange={handleRatingChange}
-                      />
-                      <button
-                        className="mt-2 bg-blue-600 px-4 py-2 text-white cursor-pointer"
-                        type="submit"
-                      >
-                        Submit
-                      </button>
-                      {loading ? <Spin className="mt-2" /> : ""}
-                    </form>
-                  </Modal>
                 </div>
               </div>
             </div>
           ))}
         </div>
+        <Modal
+          title="Edit Review"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="back" onClick={handleCancel}>
+              Cancel
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleupdatedatafunction}>
+              Save Changes
+            </Button>,
+          ]}
+        >
+          <form>
+            <div className="flex flex-col items-start mb-4">
+              <label htmlFor="review">Review</label>
+              <textarea
+                id="review"
+                className="border p-2 rounded"
+                value={review}
+                onChange={updatetextarea}
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <label htmlFor="rating">Rating</label>
+              <Rate
+                id="rating"
+                className="text-[18px]"
+                value={rating}
+                onChange={handleRatingChange}
+              />
+            </div>
+          </form>
+        </Modal>
       </div>
     </>
   );

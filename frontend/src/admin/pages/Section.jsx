@@ -16,7 +16,7 @@ export default function Section() {
   const fetchSections = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/section');
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/section`);
       setDataSource(response.data.result);
     } catch (error) {
       console.error("Failed to fetch sections:", error);
@@ -45,7 +45,7 @@ export default function Section() {
       let response;
       if (editingItem) {
         response = await axios.put(
-          `http://localhost:3000/api/v1/section/${editingItem._id}`,
+          `${import.meta.env.VITE_API_KEY}/api/v1/section/${editingItem._id}`,
           formData,
           {
             headers: {
@@ -55,7 +55,7 @@ export default function Section() {
         );
       } else {
         response = await axios.post(
-          'http://localhost:3000/api/v1/section',
+          `${import.meta.env.VITE_API_KEY}/api/v1/section`,
           formData,
           {
             headers: {
@@ -97,7 +97,7 @@ export default function Section() {
   const handleDelete = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/v1/section/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/section/${id}`);
       toast.success("Section content deleted successfully");
       fetchSections();
     } catch (error) {

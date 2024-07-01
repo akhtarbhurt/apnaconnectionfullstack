@@ -36,7 +36,7 @@ const Register = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/register")
+      .get(`${import.meta.env.VITE_API_KEY}/api/v1/register`)
       .then((res) => {
         navigate("/");
       })
@@ -57,7 +57,7 @@ const Register = () => {
     formdata.append("profileImageURL", file || "../../public/vite.svg");
 
     axios
-      .post("http://localhost:3000/api/v1/register", formdata)
+      .post(`${import.meta.env.VITE_API_KEY}/api/v1/register`, formdata)
       .then((res) => {
         console.log("signup", res.data);
         if (res.data.msg === "email already exist") {

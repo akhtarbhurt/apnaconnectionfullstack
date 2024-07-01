@@ -9,10 +9,10 @@ export default function CompanyNotificationSeeAll() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const companyIDResponse = await axios.get(`http://localhost:3000/api/v1/companyLogin`);
+        const companyIDResponse = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`);
         const companyID = companyIDResponse.data.result._id;
 
-        const response = await axios.get(`http://localhost:3000/api/v1/notifications/${companyID}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/notifications/${companyID}`);
         setNotifications(response.data.notifications);
       } catch (error) {
         console.error("Failed to fetch notifications", error);
@@ -39,11 +39,11 @@ export default function CompanyNotificationSeeAll() {
     setSearchTerm(e.target.value);
   };
 
-  const filteredNotifications = notifications.filter((notification) =>
+  const filteredNotifications = notifications?.filter((notification) =>
     notification.message.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const sortedNotifications = [...filteredNotifications].sort((a, b) => {
+  const sortedNotifications = [...filteredNotifications]?.sort((a, b) => {
     if (a.message.toLowerCase().includes(searchTerm.toLowerCase())) return -1;
     if (b.message.toLowerCase().includes(searchTerm.toLowerCase())) return 1;
     return 0;

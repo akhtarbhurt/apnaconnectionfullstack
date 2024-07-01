@@ -10,6 +10,7 @@ import {
   userReviewController
 } from "../controllers/reviews.controllers.js";
 import { extractUserInfo } from "../middleware/extractUserInfo.middleware.js";
+import { checkAuthentication } from "../middleware/checkAuthentication.js";
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.route("/reviews/:id")
 
 router.route("/companyReviews/:companyID").get(companyReviewController);
 router.route("/userReviews/:userID").get(userReviewController);
-router.route("/reply").post( addReplyController); 
+router.route("/reply").post( checkAuthentication, addReplyController); 
 router.route("/replies").get(getRepliesController);
 
 

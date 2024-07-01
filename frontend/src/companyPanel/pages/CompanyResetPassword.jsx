@@ -14,7 +14,7 @@ const CompanyResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/reset-password/${token}`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/reset-password/${token}`, {
         newPassword: values.new_password,
         confirmPassword: values.confirm_password,
       });

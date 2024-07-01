@@ -17,6 +17,7 @@ const SearchResultPage = () => {
   const [selectCategory, setSelectCategory] = useState("");
   const [search, setSearch] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
+  const [findLength, setFindLength] = useState([])
   const { id } = useParams();
   // Filter by default category id
   const filterCategory = addCompany?.filter((elem) => elem.category === id);
@@ -44,6 +45,8 @@ const SearchResultPage = () => {
   }
 
   const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
+
+  
 
   return (
     <>
@@ -101,18 +104,18 @@ const SearchResultPage = () => {
           <div className='w-full md:w-8/12 px-4 min-h-screen'>
             {filteredResults?.length > 0 ? (
               filteredResults.map((elem) => (
+                
                 <div key={elem._id} className='bg-white w-full mt-3 py-3 px-4 mb-4 md:w-11/12 lg:w-8/12'>
+                
                   <div className='text-[#428BCA] flex gap-2'>
                     <Link to={`/publicreviewpage/${elem._id}`}>{elem.companyName}</Link> | <span>{elem.siteLink}</span>
-                  </div>
-                  <div className='flex items-center mt-2'>
-                    <Rate tooltips={desc} value={Math.ceil(2.7)} />
-                    <span className='ml-3 text-sm'>8 reviews</span>
-                    <span className='ml-3 text-sm'>TrustScore 2.7</span>
-                    <span className='ml-3 text-sm'>|</span>
                     <Link to={`/review/${elem._id}`} >
                        <span className='ml-3 text-sm'>Write a review</span>
                     </Link>
+                  </div>
+                  <div className='flex items-center mt-2'>
+                    <p> {elem.description} </p>
+                    
                   </div>
                 </div>
               ))

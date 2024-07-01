@@ -1,3 +1,4 @@
+import User from "../models/user.models";
 
 
 router.get('/verify-email/:id/', async (req, res) => {
