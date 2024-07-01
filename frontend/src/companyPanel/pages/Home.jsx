@@ -15,10 +15,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchReviewsData = async () => {
       try {
-        const companyIDResponse = await axios.get('http://localhost:3000/api/v1/companyLogin');
+        const companyIDResponse = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`);
         const companyID = companyIDResponse?.data?.result?._id;
 
-        const response = await axios.get(`http://localhost:3000/api/v1/companyReviews/${companyID}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyReviews/${companyID}`);
         const reviews = response?.data?.payload;
 
         // Process data for the charts

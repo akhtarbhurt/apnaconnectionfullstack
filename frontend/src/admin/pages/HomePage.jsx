@@ -66,7 +66,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/userReg");
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/userReg`);
         const usersData = response.data.result.map((user, index) => ({
           key: index,
           companyName: user.companyName,

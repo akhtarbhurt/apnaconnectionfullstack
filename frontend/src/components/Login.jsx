@@ -39,7 +39,7 @@ const Login = () => {
   // for navbar login signup and role
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/login")
+      .get(`${import.meta.env.VITE_API_KEY}/api/v1/login`)
 
       .then((res) => {
 
@@ -57,7 +57,7 @@ const Login = () => {
     setloader(true);
 
     axios
-      .post("http://localhost:3000/api/v1/login", auth)
+      .post(`${import.meta.env.VITE_API_KEY}/api/v1/login`, auth)
       .then((res) => {
         console.log("login successful", res.data);
 

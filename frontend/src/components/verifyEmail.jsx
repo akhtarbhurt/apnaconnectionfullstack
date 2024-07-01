@@ -18,7 +18,7 @@ function ResetPassword() {
     useEffect(() => {
         const call = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/v1/verify-email/${id}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/verify-email/${id}`);
                 if (!toastShownRef.current) {
                   toast.success('Email verified successfully');
                   toastShownRef.current = true;

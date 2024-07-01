@@ -25,7 +25,7 @@ export const AppProvider = ({ children }) => {
     const fetchHeadingApi = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/heading"
+          `${import.meta.env.VITE_API_KEY}/api/v1/heading`
         );
         setHeading(response.data.result);
       } catch (error) {
@@ -40,7 +40,7 @@ export const AppProvider = ({ children }) => {
     const fetchCategoryApi = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/category"
+          `${import.meta.env.VITE_API_KEY}/api/v1/category`
         );
         setCategory(response.data.result);
       } catch (error) {
@@ -54,7 +54,7 @@ export const AppProvider = ({ children }) => {
     const fetchSectionApi = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/section"
+          `${import.meta.env.VITE_API_KEY}/api/v1/section`
         );
         setSection(response.data.result);
       } catch (error) {
@@ -68,7 +68,7 @@ export const AppProvider = ({ children }) => {
     const fetchUserReg = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/userReg"
+          `${import.meta.env.VITE_API_KEY}/api/v1/userReg`
         );
         setAddCompany(response.data.result);
       } catch (error) {
@@ -80,7 +80,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/login");
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/login`);
         setProfile(response.data.result);
         // console.log("profile is", profile);
       } catch (error) {
@@ -94,7 +94,7 @@ export const AppProvider = ({ children }) => {
     const fetchReview = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/reviews"
+          `${import.meta.env.VITE_API_KEY}/api/v1/reviews`
         );
         setReview(response.data.payload);
       } catch (error) {
@@ -107,7 +107,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchClient = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/client`);
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/client`);
         setClient(response.data.result);
       } catch (error) {
         // console.log(error);
@@ -120,7 +120,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchGetLikes = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/like");
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/like`);
         setGetLike(response.data.result);
       } catch (error) {
         // console.log(error);
@@ -132,7 +132,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/`); 
         setUserProfile(response.data);
       } catch (err) {
         // console.log("Error", err);
@@ -143,7 +143,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchComanyLoogin = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/companyLogin"); 
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`); 
         setCompanyLogin(response.data)
       } catch (err) {
         // console.log("Error", err);
@@ -155,7 +155,7 @@ export const AppProvider = ({ children }) => {
   useEffect(()=>{
     const fetchCompaniesReplies = async ()=>{
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/replies")
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/replies`)
         setReplies(response.data.payload)
       } catch (error) {
         // console.log(error)

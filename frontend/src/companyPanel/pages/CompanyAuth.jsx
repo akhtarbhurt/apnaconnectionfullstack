@@ -6,7 +6,7 @@ import axios from 'axios';
 const CompanyAuth = () => {
   const onFinishChangePassword = async (values) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/changePassword', {
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/changePassword`, {
         currentPassword: values.current_password,
         newPassword: values.new_password,
         confirmPassword: values.confirm_password,

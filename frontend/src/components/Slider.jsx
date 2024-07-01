@@ -27,7 +27,7 @@ export default function Slider() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/"); // Adjust endpoint if necessary
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/`); // Adjust endpoint if necessary
         setProfile(response.data);
         console.log(response.data);
       } catch (err) {

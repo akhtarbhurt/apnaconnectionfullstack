@@ -20,7 +20,7 @@ const ClientFeedback = () => {
   const fetchFeedbacks = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/client');
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/client`);
       setFeedbacks(response.data.result);
       setFilteredFeedbacks(response.data.result);
     } catch (error) {
@@ -46,11 +46,11 @@ const ClientFeedback = () => {
 
       let response;
       if (isEditMode) {
-        response = await axios.put(`http://localhost:3000/api/v1/client/${currentFeedback._id}`, formData, {
+        response = await axios.put(`${import.meta.env.VITE_API_KEY}/api/v1/client/${currentFeedback._id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       } else {
-        response = await axios.post('http://localhost:3000/api/v1/client', formData, {
+        response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/client`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
@@ -75,7 +75,7 @@ const ClientFeedback = () => {
   const handleDeleteFeedback = async (id) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/api/v1/client/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_KEY}/api/v1/client/${id}`);
       message.success('Feedback deleted successfully');
       setFeedbacks(prevFeedbacks => prevFeedbacks.filter(feedback => feedback._id !== id));
       setFilteredFeedbacks(prevFeedbacks => prevFeedbacks.filter(feedback => feedback._id !== id));

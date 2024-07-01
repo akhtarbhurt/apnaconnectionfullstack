@@ -21,13 +21,13 @@ export default function CompanyNavbar({ handleTabs }) {
     const fetchNotifications = async () => {
       try {
         const companyIDResponse = await axios.get(
-          `http://localhost:3000/api/v1/companyLogin`
+          `${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`
         );
         const companyID = companyIDResponse.data.result._id;
         setCompanyID(companyID);
 
         const response = await axios.get(
-          `http://localhost:3000/api/v1/notifications/${companyID}`
+          `${import.meta.env.VITE_API_KEY}/api/v1/notifications/${companyID}`
         );
         setNotifications(response.data.notifications);
       } catch (error) {
@@ -65,7 +65,7 @@ export default function CompanyNavbar({ handleTabs }) {
   const handleMarkAsSeen = async (id) => {
     try {
       await axios.put(
-        `http://localhost:3000/api/v1/notifications/mark-as-seen/${id}`
+        `${import.meta.env.VITE_API_KEY}/api/v1/notifications/mark-as-seen/${id}`
       );
       setNotifications((notifications) =>
         notifications.map((notification) =>
@@ -118,7 +118,7 @@ export default function CompanyNavbar({ handleTabs }) {
     if (!isNotificationActive && companyID) {
       try {
         await axios.put(
-          `http://localhost:3000/api/v1/notifications/mark-all-as-seen`,
+          `${import.meta.env.VITE_API_KEY}/api/v1/notifications/mark-all-as-seen`,
           { companyID }
         );
         setNotifications((notifications) =>
@@ -133,7 +133,7 @@ export default function CompanyNavbar({ handleTabs }) {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/v1/companyLogout",
+        `${import.meta.env.VITE_API_KEY}/api/v1/companyLogout`,
         {},
         { withCredentials: true }
       );
@@ -165,7 +165,7 @@ export default function CompanyNavbar({ handleTabs }) {
         >
           <IoIosNotifications className="text-2xl text-gray-600" />
           <span className="bg-blue-500 rounded-full h-4 p-2 flex justify-center items-center absolute -top-1 -right-2 text-[10px] text-white">
-            {notifications?.filter((notification) => !notification.seen).length}
+            {notifications?.filter((notification) => !notification.seen)?.length || 0}
           </span>
         </div>
         <div
@@ -225,8 +225,8 @@ export default function CompanyNavbar({ handleTabs }) {
           } origin-top`}
         >
           <ul className=" h-[20vh] overflow-x-auto ">
-            {notifications.length > 0 ? (
-              notifications.map((notification) => (
+            {notifications?.length > 0 ? (
+              notifications?.map((notification) => (
                 <li
                   key={notification._id}
                   className={`flex flex-col gap-2 mb-2 p-2 border-b cursor-pointer ${

@@ -23,7 +23,7 @@ export default function Setting() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/category",
+        `${import.meta.env.VITE_API_KEY}/api/v1/category`,
         formData,
         {
           headers: {
@@ -43,7 +43,7 @@ export default function Setting() {
   const handleContactSave = async (values) => {
     console.log("Contact values:", values);
     try {
-      const response = await axios.post("http://localhost:3000/api/v1/contact", values);
+      const response = await axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/contact`, values);
       console.log("API Response:", response.data);
       if (response.status === 200) {
         toast.success("Contact information has been saved");

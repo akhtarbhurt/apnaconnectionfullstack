@@ -22,7 +22,7 @@ export default function Categories() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/category', {
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/category`, {
         params: {
           page: currentPage,
           size: pageSize,

@@ -23,7 +23,7 @@ export default function Login() {
   const handleLogin = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/companyLogin",
+        `${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`,
         values
       );
       if (response.status === 200) {
@@ -43,7 +43,7 @@ export default function Login() {
   const handleForgotPassword = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/request-password-reset",
+        `${import.meta.env.VITE_API_KEY}/api/v1/request-password-reset`,
         { email }
       );
       message.success(response.data.message);

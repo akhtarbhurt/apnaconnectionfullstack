@@ -40,7 +40,7 @@ useEffect(()=>{
       if (token) {
         alert("Sending POST request");
         console.log("Sending POST request");
-        const res = await axios.post("http://localhost:3001/contact", {
+        const res = await axios.post(`${import.meta.env.VITE_API_KEY}/contact`, {
           token,
         });
         console.log("Response received:", res.data);
@@ -64,7 +64,7 @@ useEffect(()=>{
       if (tokenquestion) {
         alert("Sending POST request");
         console.log("Sending POST request");
-        const res = await axios.post("http://localhost:3001/contactquestion", {
+        const res = await axios.post(`${import.meta.env.VITE_API_KEY}/contactquestion`, {
           tokenquestion,
         });
         console.log("Response received:", res.data);

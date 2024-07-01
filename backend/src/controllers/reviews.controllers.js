@@ -5,6 +5,7 @@ import { Reply } from "../models/reply.models.js";
 import Notification from "../models/notification.models.js";
 import { UserRegistration } from "../models/userRegistration.models.js";
 import { UserNotification } from "../models/userNotification.models.js";
+import jwt from "jsonwebtoken"
 
 const reviewsController = async (req, res) => {
   try {
@@ -111,7 +112,7 @@ const userReviewController = async (req, res) => {
 
 const addReplyController = async (req, res) => {
   try {
-    const { companyID, reviewID, text, isCompanyReply } = req.body;
+    const {  reviewID, text, isCompanyReply } = req.body;
 
     // Fetch the review to get the userID
     const review = await Reviews.findById(reviewID);
@@ -131,14 +132,14 @@ const addReplyController = async (req, res) => {
     }
 
     //find a company name
-    const {id} = req.params
-    const findCompany = await UserRegistration.findById(companyID)
-
+    const {Companytoken} = req?.cookies
+    const verifyToken = jwt.verify(Companytoken, process.env.JWT_SECRET)
+    console.log( "verifytoken of company is ", verifyToken)
     // Create a notification for the user
     const notification = await UserNotification.create({
       userID: review.userID,
-      text: `${findCompany?.companyName} replied to your review: "${text}"`,
-      companyName: findCompany?.companyName
+      text: `${verifyToken.companyName} replied to your review: "${text}"`,
+      companyName: verifyToken.companyName
     });
 
     // Broadcast the new reply and notification to WebSocket clients

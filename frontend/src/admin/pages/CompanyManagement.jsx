@@ -18,7 +18,7 @@ export default function CompanyManagement() {
   const fetchCompanies = async (page, size, searchTerm) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/userReg`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/userReg`, {
         params: {
           page,
           size,

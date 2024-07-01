@@ -8,7 +8,7 @@ const CheckBlockStatus = () => {
   React.useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/', {
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/`, {
           withCredentials: true, // Ensure cookies are sent
         });
         setCheckStatus(response.data)

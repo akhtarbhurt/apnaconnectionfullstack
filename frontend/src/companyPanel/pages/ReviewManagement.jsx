@@ -20,12 +20,12 @@ const ReviewManagement = () => {
     const fetchReviews = async () => {
       setLoading(true);
       try {
-        const companyIDResponse = await axios.get(`http://localhost:3000/api/v1/companyLogin`);
+        const companyIDResponse = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`);
         const companyData = companyIDResponse.data.result;
         const companyID = companyData._id;
         setGetName(companyData.companyName);
 
-        const response = await axios.get(`http://localhost:3000/api/v1/companyReviews/${companyID}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyReviews/${companyID}`);
         setReviews(response.data.payload);
       } catch (error) {
         console.error('Failed to fetch reviews', error);
@@ -65,12 +65,12 @@ const ReviewManagement = () => {
     }
 
     try {
-      const companyIDResponse = await axios.get(`http://localhost:3000/api/v1/companyLogin`);
+      const companyIDResponse = await axios.get(`${import.meta.env.VITE_API_KEY}/api/v1/companyLogin`);
       const companyData = companyIDResponse.data.result;
       const userID = companyData.userID;
       setGetCompany(companyData)
       const response = await axios.post(
-        `http://localhost:3000/api/v1/reply`,
+        `${import.meta.env.VITE_API_KEY}/api/v1/reply`,
         {
           reviewID: selectedReview._id,
           text: replyText,
@@ -103,7 +103,7 @@ const ReviewManagement = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/v1/reportReview`,
+        `${import.meta.env.VITE_API_KEY}/api/v1/reportReview`,
         {
           reviewID: selectedReportReview._id,
           action: reportReason,

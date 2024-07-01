@@ -15,7 +15,7 @@ function Forgetpassword() {
     const handleSubmit = (e) => {
         e.preventDefault()
         setloader(true)
-        axios.post('http://localhost:3000/api/v1/forgetpassword', {email})
+        axios.post(`${import.meta.env.VITE_API_KEY}/api/v1/forgetpassword`, {email})
         .then(res => {
 console.log("resolved",res.data)
             if(res.data.Status === "Success") {
