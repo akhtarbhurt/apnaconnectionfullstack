@@ -32,10 +32,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      const errorMessage =
-        error.response && error.response.data && error.response.data.message
-          ? error.response.data.message
-          : "Login failed: An unknown error occurred";
+      const errorMessage = error?.response?.data?.error;
       message.error(errorMessage);
     }
   };
@@ -79,15 +76,19 @@ export default function Login() {
           <Form.Item
             name="password"
             label="Password"
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[
+              { required: true, message: "Please input your password!" },
+              { min: 3, message: "Password must be at least 3 characters long!" },
+              { max: 20, message: "Password must be at most 20 characters long!" },
+            ]}
           >
             <Input.Password />
           </Form.Item>
-          <div className='w-full text-end capitalize'>
-          <Button type="link" onClick={() => setForgotPasswordVisible(true)}>
-            Forgot Password?
-          </Button>
-        </div>
+          <div className="w-full text-end capitalize">
+            <Button type="link" onClick={() => setForgotPasswordVisible(true)}>
+              Forgot Password?
+            </Button>
+          </div>
           <Form.Item>
             <Button
               type="primary"
@@ -114,7 +115,6 @@ export default function Login() {
         title="Request Password Reset"
         visible={forgotPasswordVisible}
         onCancel={() => setForgotPasswordVisible(false)}
-        // onOk={handleForgotPassword}
         footer={[
           <Button
             type="primary"
