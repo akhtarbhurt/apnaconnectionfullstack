@@ -1,0 +1,14 @@
+{"_id":{"$oid":"6653798980e990c87b748e95"},"category":"Internet Service","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716746633/r9kazxbqvig1sdwy7a0v.svg","__v":0}
+{"_id":{"$oid":"665379bf80e990c87b748e9a"},"category":"Telecom ","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716746687/p9vvo8dexlllgipuejez.svg","__v":0}
+{"_id":{"$oid":"665379fb80e990c87b748e9d"},"category":"Banks","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716746746/br02x5tmzyitvvkedw7t.svg","__v":0}
+{"_id":{"$oid":"66537c3b80e990c87b748ea3"},"category":"Shopping Malls ","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747323/elabh81qvn689lmvnz4q.svg","__v":0}
+{"_id":{"$oid":"66537c7980e990c87b748ea6"},"category":"Car Dealers","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747384/utignkujpklevycyyyb8.svg","__v":0}
+{"_id":{"$oid":"66537cae80e990c87b748ea9"},"category":"Fitness","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747437/byqlptkley8u0e3agxxq.svg","__v":0}
+{"_id":{"$oid":"66537cdf80e990c87b748eac"},"category":"Real Estate Agency","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747486/hvhsjsrpeu5hmcnuhy3h.svg","__v":0}
+{"_id":{"$oid":"66537d1080e990c87b748eaf"},"category":"Builders","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747536/jhxbahf1gjz0xypd2ajs.svg","__v":0}
+{"_id":{"$oid":"66537d6480e990c87b748eba"},"category":"Fast Food","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747621/qg5fxyas9uqo8szujgnq.svg","__v":0}
+{"_id":{"$oid":"66537da480e990c87b748ebd"},"category":"Online Stores","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747684/tthyhfprhe7rpiw9xrru.svg","__v":0}
+{"_id":{"$oid":"66537dd180e990c87b748ec0"},"category":"Schools","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747729/yztmjbcc2sgtmgywngmg.svg","__v":0}
+{"_id":{"$oid":"66537e2980e990c87b748ec5"},"category":"Home Appliances","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747817/oo4zvled9h1yeegzkadx.svg","__v":0}
+{"_id":{"$oid":"66537e5880e990c87b748ec8"},"category":"Insurance Companies","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747863/ttanyzksdmowxllolc1t.svg","__v":0}
+{"_id":{"$oid":"66537eb480e990c87b748ecd"},"category":"Hospitals","catImage":"http://res.cloudinary.com/dfryqj5cn/image/upload/v1716747956/jtbtzdhnkceifehddz3d.svg","__v":0}

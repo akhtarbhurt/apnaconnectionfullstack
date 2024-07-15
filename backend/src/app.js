@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from "path"
 
 dotenv.config();
 
 const app = express();
-
+const _dirname = path.dirname("")
+const buildpath = path.join(_dirname, "")
 app.use(cors({
   credentials: true,
   origin: process.env.ORIGIN_URL
